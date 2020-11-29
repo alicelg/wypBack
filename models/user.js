@@ -13,6 +13,17 @@ const getAll = () => {
     });
 }
 
+/* Función para login (ingresar como usuario ya registrado) */
+const getByEmail = (pEmail) => {
+    return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM users WHERE email = ?', [pEmail], (error, rows) => {
+            if (error) reject(error);
+            if (rows.length !== 1) resolve(null); /* el email debe ser unico, no dejar registrar más de una vez */
+            resolve(rows[0]);
+        });
+    });
+}
+
 /* POST */
 
 /* Creación de un usuario nuevo / registro */
@@ -25,6 +36,9 @@ const create = ({ nickname, email, password }) => {
     });
 };
 
+
+
+
 module.exports = {
-    getAll, create
+    getAll, create, getByEmail
 }

@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
-const { getAll, create } = require('../models/user');
+const { getAll, create, getByEmail } = require('../models/user');
 
 
 /* GETALL usuarios */
@@ -24,6 +24,32 @@ router.post('/create', async (req, res) => {
   } catch (error) {
     res.json({ error: error.message });
   }
+});
+
+
+/* POST LOGIN */
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    /* verificación del email */
+    const user = await getByEmail(email);
+    if (!user) {
+      return res.json({ error: 'Error en el email y/o contraseña' });
+    }
+    /* verificación de la contraseña */
+    const match = bcrypt.compareSync(password, user.password);
+    if (!match) {
+      return res.json({ error: 'Error en el email y/o contraseña' });
+    }
+    /* email y contraseña CORRECTOS*/
+    res.json({
+      success: 'Entra el usuario 🐷'
+    })
+
+  } catch (error) {
+    res.json({ error: error.message })
+  }
+
 })
 
 module.exports = router;
