@@ -2,3 +2,13 @@ GET http://localhost:3000/
 
 ###
 GET http://localhost:3000/users
+
+###
+POST http://localhost:3000/users/create
+Content-Type: application/json
+
+{
+    "nickname":"Pepa0",
+    "email":"pepa@ucm.es",
+    "password":"123456"
+}
