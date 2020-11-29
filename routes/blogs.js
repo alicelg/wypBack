@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getAll } = require('../models/blog');
+const { getAll, create } = require('../models/blog');
 
 
 /* recupero todos los POSTS DEL BLOG */
@@ -11,7 +11,21 @@ router.get('/', async (req, res) => {
     } catch (error) {
         res.json({ error: error.message })
     }
+});
 
+/* creación de post para el blog */
+router.post('/create', async (req, res) => {
+    try {
+        const result = await create(req.body);
+
+        if (result.affectedRows === 1) {
+            res.json({
+                mensaje: 'Se agrego correctamente el ejercicio',
+            });
+        }
+    } catch (error) {
+        res.json({ error: error.message })
+    }
 })
 
 module.exports = router;

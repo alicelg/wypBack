@@ -18,3 +18,18 @@ Content-Type: application/json
 //recupera todos los blogs
 ###
 GET http://localhost:3000/blogs
+
+//creo un post
+###
+POST http://localhost:3000/blogs/create
+Content-Type: application/json
+
+{
+    "title":"La economia en Colombia",
+    "main_image":"",
+    "category":"economia",
+    "keywords":"economia, país, Colombia",
+    "text":"lorem lorem lorem lorem ",
+    "user_id":"1"
+}
+
