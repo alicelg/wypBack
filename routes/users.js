@@ -1,9 +1,17 @@
-var express = require('express');
-var router = express.Router();
+const router = require('express').Router();
+const { getAll } = require('../models/user');
+
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.get('/', async (req, res) => {
+  try {
+    const rows = await getAll();
+    res.json(rows);
+  } catch (error) {
+    res.json({ error: error.message })
+  }
+
+
 });
 
 module.exports = router;
