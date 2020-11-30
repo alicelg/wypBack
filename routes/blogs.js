@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getAll, create, getAllComments } = require('../models/blog');
+const { getAll, create, getAllComments, createComment } = require('../models/blog');
 
 
 /* recupero todos los POSTS DEL BLOG */
@@ -33,6 +33,18 @@ router.get('/comments', async (req, res) => {
     try {
         const rows = await getAllComments();
         res.json(rows);
+    } catch (error) {
+        res.json({ error: error.message })
+    }
+});
+
+/* creación de un comentario en un post */
+router.post('/create-comment', async (req, res) => {
+    try {
+        const result = await createComment(req.body);
+        if (result.affectedRows === 1) {
+            res.json(result);
+        }
     } catch (error) {
         res.json({ error: error.message })
     }

@@ -38,3 +38,15 @@ Content-Type: application/json
 ###
 GET http://localhost:3000/blogs/comments 
 
+
+//creo un comentario
+###
+POST http://localhost:3000/blogs/create-comment
+Content-Type: application/json
+
+{
+    "title":"Interesante y constructivo",
+    "text":"lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem ",
+    "user_id":"1",
+    "post_id":"3"
+}
