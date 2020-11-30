@@ -25,11 +25,16 @@ POST http://localhost:3000/blogs/create
 Content-Type: application/json
 
 {
-    "title":"La economia en Colombia",
+    "title":"La economia en España",
     "main_image":"",
     "category":"economia",
-    "keywords":"economia, país, Colombia",
-    "text":"lorem lorem lorem lorem ",
-    "user_id":"1"
+    "keywords":"economia, país, España",
+    "text":"lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem ",
+    "user_id":"2"
 }
+
+
+//recupera todos los comentarios
+###
+GET http://localhost:3000/blogs/comments 
 

@@ -19,7 +19,18 @@ const create = ({ title, main_image, category, keywords, date, text, user_id }) 
     });
 }
 
+/* Función para recuperar todos los COMENTARIOS de los POSTS del BLOG */
+const getAllComments = () => {
+    return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM comments', (error, rows) => {
+            if (error) reject(error);
+            resolve(rows)
+        });
+    });
+};
+
+
 
 module.exports = {
-    getAll, create
+    getAll, create, getAllComments
 }

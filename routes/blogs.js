@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getAll, create } = require('../models/blog');
+const { getAll, create, getAllComments } = require('../models/blog');
 
 
 /* recupero todos los POSTS DEL BLOG */
@@ -26,6 +26,16 @@ router.post('/create', async (req, res) => {
     } catch (error) {
         res.json({ error: error.message })
     }
-})
+});
+
+/* recupero los comentarios realizados en los posts */
+router.get('/comments', async (req, res) => {
+    try {
+        const rows = await getAllComments();
+        res.json(rows);
+    } catch (error) {
+        res.json({ error: error.message })
+    }
+});
 
 module.exports = router;
