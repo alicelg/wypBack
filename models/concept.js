@@ -1,4 +1,4 @@
-/* Funciones de las acciones sobre la tabla de comentarios  */
+/* Funciones para recuperar todos los conceptos */
 
 /* GET */
 
