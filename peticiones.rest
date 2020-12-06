@@ -17,3 +17,8 @@ Content-Type: application/json
 //GetAllConcepts 
 ###
 GET http://localhost:3000/concepts
+
+
+//GetAllPosts
+###
+GET http://localhost:3000/posts
