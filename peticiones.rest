@@ -30,3 +30,9 @@ GET http://localhost:3000/concepts
 //GetAllPosts
 ###
 GET http://localhost:3000/posts
+
+//GetByPostId
+###
+GET http://localhost:3000/posts/3
+
+
