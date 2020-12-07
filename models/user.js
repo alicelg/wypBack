@@ -36,9 +36,6 @@ const create = ({ nickname, email, password }) => {
     });
 };
 
-
-
-
 module.exports = {
     getAll, create, getByEmail
 }

@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { getAll, create, getByEmail } = require('../models/user');
 
 
@@ -43,7 +44,8 @@ router.post('/login', async (req, res) => {
     }
     /* email y contraseña CORRECTOS*/
     res.json({
-      success: 'Entra el usuario 🐷'
+      success: 'Entra el usuario 🐷', 
+      token: createJwtToken(user)
     })
 
   } catch (error) {
@@ -51,5 +53,14 @@ router.post('/login', async (req, res) => {
   }
 
 })
+
+function createJwtToken(user) {
+  const obj = {
+    userId: user.id,
+    userRole: user.role
+  }
+
+  return jwt.sign(obj, process.env.SECRET_KEY, {expiresIn: '48h'});
+}
 
 module.exports = router;

@@ -18,7 +18,7 @@ POST http://localhost:3000/users/login
 Content-Type: application/json
 
 {
-    "email":"pepa7@ucm.es",
+    "email":"pepa@ucm.es",
     "password":"123456"
 }
 
