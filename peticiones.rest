@@ -21,3 +21,12 @@ Content-Type: application/json
     "email":"pepa7@ucm.es",
     "password":"123456"
 }
+
+//GetAllConcepts 
+###
+GET http://localhost:3000/concepts
+
+
+//GetAllPosts
+###
+GET http://localhost:3000/posts
