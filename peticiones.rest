@@ -25,6 +25,8 @@ Content-Type: application/json
 //GetAllConcepts 
 ###
 GET http://localhost:3000/concepts
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoicGVwYUB1Y20uZXMiLCJ1c2VyUm9sZSI6InVzZXIiLCJpYXQiOjE2MDczNTkxNTEsImV4cCI6MTYwNzUzMTk1MX0.At4POv7YleTOFiU2oziYFOqutzIjQfbwFjFzLuyCD98
+ 
 
 
 //GetAllPosts

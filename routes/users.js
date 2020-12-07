@@ -57,6 +57,7 @@ router.post('/login', async (req, res) => {
 function createJwtToken(user) {
   const obj = {
     userId: user.id,
+    email: user.email,
     userRole: user.role
   }
 
