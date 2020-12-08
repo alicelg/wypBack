@@ -10,7 +10,7 @@ const checkToken = async (req, res, next) => {
     }
 
     if (!req.headers['authorization']) {
-        return res.status(403).json({ error: 'Authorization not found' });
+        return res.status(403).json({ error: process.env.RESPONSE_UNAUTHORIZED });
 
     } else {
 
@@ -19,16 +19,16 @@ const checkToken = async (req, res, next) => {
         // comprobamos si el token esta codificado con la secret key correcta
         try {
             const decoded = jwt.verify(token, process.env.SECRET_KEY);
-            
+
             const usuario = await getByEmail(decoded.email);
             if (!usuario) {
-                return res.status(403).json({ error: 'User not found' });
+                return res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND });
             }
             req.user = usuario;
             next();
 
         } catch (err) {
-            return res.status(403).json({ error: 'Invalid token' });
+            return res.status(403).json({ error: process.env.RESPONSE_UNAUTHORIZED });
         }
 
 

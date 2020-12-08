@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
     const rows = await getAll();
     res.json(rows);
   } catch (error) {
-    res.json({ error: error.message })
+    return res.status(400).json({ error:  process.env.RESPONSE_NOT_FOUND});
   }
 
 });
@@ -23,7 +23,7 @@ router.post('/create', async (req, res) => {
     const result = await create(req.body);
     res.json(result);
   } catch (error) {
-    res.json({ error: error.message });
+    return res.status(400).json({ error:  process.env.RESPONSE_ERROR_ON_SAVE});
   }
 });
 
@@ -35,21 +35,18 @@ router.post('/login', async (req, res) => {
     /* verificación del email */
     const user = await getByEmail(email);
     if (!user) {
-      return res.json({ error: 'Error en el email y/o contraseña' });
+      return res.status(400).json({ error:  process.env.RESPONSE_UNAUTHORIZED});
     }
     /* verificación de la contraseña */
     const match = bcrypt.compareSync(password, user.password);
     if (!match) {
-      return res.json({ error: 'Error en el email y/o contraseña' });
+      return res.status(400).json({ error: process.env.RESPONSE_UNAUTHORIZED });
     }
     /* email y contraseña CORRECTOS*/
-    res.json({
-      success: 'Entra el usuario 🐷', 
-      token: createJwtToken(user)
-    })
+    res.json({ token: createJwtToken(user) })
 
   } catch (error) {
-    res.json({ error: error.message })
+    return res.status(400).json({ error:  process.env.RESPONSE_UNAUTHORIZED});
   }
 
 })

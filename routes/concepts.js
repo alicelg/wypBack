@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
         const rows = await getAllConcepts();
         res.json(rows);
     } catch (error) {
-        res.json({ error: error.message })
+        res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
     }
 });
 
