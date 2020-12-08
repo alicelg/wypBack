@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
         const rows = await getAllPosts();
         res.json(rows);
     } catch (error) {
-        res.json({ error: error.message })
+        res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
     }
 });
 
@@ -20,7 +20,9 @@ router.get('/:postId', (req, res) => {
         .then(post => {
             res.json(post);
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
+        });
 })
 
 
