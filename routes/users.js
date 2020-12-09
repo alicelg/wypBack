@@ -10,9 +10,8 @@ router.get('/', async (req, res) => {
     const rows = await getAll();
     res.json(rows);
   } catch (error) {
-    return res.status(400).json({ error:  process.env.RESPONSE_NOT_FOUND});
+    return res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND });
   }
-
 });
 
 /* POST CREATE */
@@ -23,7 +22,13 @@ router.post('/create', async (req, res) => {
     const result = await create(req.body);
     res.json(result);
   } catch (error) {
-    return res.status(400).json({ error:  process.env.RESPONSE_ERROR_ON_SAVE});
+    console.log(error.code, error.errno);
+
+    if (error.errno == 1062) {
+      return res.status(400).json({ error: process.env.RESPONSE_ALREADY_EXISTS })
+    } else {
+      return res.status(400).json({ error: process.env.RESPONSE_ERROR_ON_SAVE })
+    } ;
   }
 });
 
@@ -35,7 +40,7 @@ router.post('/login', async (req, res) => {
     /* verificación del email */
     const user = await getByEmail(email);
     if (!user) {
-      return res.status(400).json({ error:  process.env.RESPONSE_UNAUTHORIZED});
+      return res.status(400).json({ error: process.env.RESPONSE_UNAUTHORIZED });
     }
     /* verificación de la contraseña */
     const match = bcrypt.compareSync(password, user.password);
@@ -46,7 +51,7 @@ router.post('/login', async (req, res) => {
     res.json({ token: createJwtToken(user) })
 
   } catch (error) {
-    return res.status(400).json({ error:  process.env.RESPONSE_UNAUTHORIZED});
+    return res.status(400).json({ error: process.env.RESPONSE_UNAUTHORIZED });
   }
 
 })
@@ -58,7 +63,7 @@ function createJwtToken(user) {
     userRole: user.role
   }
 
-  return jwt.sign(obj, process.env.SECRET_KEY, {expiresIn: '48h'});
+  return jwt.sign(obj, process.env.SECRET_KEY, { expiresIn: '48h' });
 }
 
 module.exports = router;
