@@ -23,6 +23,18 @@ const getPostById = (pPostId) => {
     });
 };
 
+// busqueda de post por nombre y blog
+const getPostByTitleType = (pTitle, pType) => {
+    return new Promise((resolve, reject) => {
+        const query = db.query('SELECT id,title FROM posts WHERE posts.title = ? AND posts.type = ? AND posts.delete= 0', [pTitle, pType], (error, rows) => {
+            if (error) { console.log(error); reject(error) };
+            if (rows.length === 0) resolve(null);
+            resolve(rows[0]);
+        });
+        console.log(query.sql)
+    });
+};
+
 module.exports = {
-    getAllPosts, getPostById
+    getAllPosts, getPostById, getPostByTitleType
 }
