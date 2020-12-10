@@ -23,7 +23,8 @@ router.get('/', async (req, res) => {
       hablandoPostsRows = await getPostByTitleType(query.searchTerm, 2);
     }
 
-    if (query.concepts) {
+    if (query.concepts != 'null') {
+      console.log(query, query.concepts);
       const translateKeys = getTranslateKey(query.searchTerm)
       if (translateKeys.length) {
         const translateKeysRefined = translateKeys.map(translateKey => 'CONCEPT.' + translateKey)
