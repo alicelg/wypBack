@@ -26,7 +26,7 @@ const getPostById = (pPostId) => {
 // busqueda de post por nombre y blog
 const getPostByTitleType = (pTitle, pType) => {
     return new Promise((resolve, reject) => {
-        const query = db.query("SELECT id,title FROM posts WHERE posts.title LIKE ? AND posts.type = ? AND posts.delete= 0", ['%'+pTitle+'%', pType], (error, rows) => {
+        const query = db.query("SELECT * FROM posts WHERE posts.title LIKE ? AND posts.type = ? AND posts.delete= 0", ['%' + pTitle + '%', pType], (error, rows) => {
             if (error) { console.log(error); reject(error) };
             if (rows.length === 0) resolve(null);
             resolve(rows);
@@ -34,6 +34,26 @@ const getPostByTitleType = (pTitle, pType) => {
     });
 };
 
+/* recupero un post por id para poderlo visualizar en detalle en front*/
+const getPostsByCategory = (pCategory, pType) => {
+    console.log(pCategory, pType);
+    return new Promise((resolve, reject) => {
+        if (pCategory == 'todos') {
+            db.query('SELECT * FROM posts where type = ?', [pType], (error, rows) => {
+                if (error) reject(error);
+                if (rows.length === 0) resolve(null);
+                resolve(rows);
+            });
+        } else {
+            db.query('SELECT * FROM posts WHERE category = ? AND type = ?', [pCategory, pType], (error, rows) => {
+                if (error) reject(error);
+                if (rows.length === 0) resolve(null);
+                resolve(rows);
+            });
+        }
+    });
+};
+
 module.exports = {
-    getAllPosts, getPostById, getPostByTitleType
+    getAllPosts, getPostById, getPostByTitleType, getPostsByCategory
 }
