@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
     let conceptsRows;
 
     if (query.blogs.includes('1')) {
-      generalPostsRows = await getPostByTitleType(query.searchTerm, 1);
+      generalPostsRows = await getPostByTitleType(query.searchTerm.toLowerCase(), 1);
     }
 
     if (query.blogs.includes('2')) {
@@ -45,8 +45,8 @@ router.get('/', async (req, res) => {
 });
 
 function getTranslateKey(term) {
-  const esESResult= Object.keys(esES).filter(key => esES[key].includes(term));
-  const enGBResult = Object.keys(enGB).filter(key => enGB[key].includes(term));
+  const esESResult= Object.keys(esES).filter(key => esES[key].toLowerCase().includes(term.toLowerCase()));
+  const enGBResult = Object.keys(enGB).filter(key => enGB[key].toLowerCase().includes(term.toLowerCase()));
   
   return esESResult.concat(enGBResult);
 }
