@@ -38,7 +38,6 @@ const getPostByTitleType = (pTitle, pType) => {
 
 /* recupero un post por id para poderlo visualizar en detalle en front*/
 const getPostsByCategory = (pCategory, pType) => {
-    console.log(pCategory, pType);
     return new Promise((resolve, reject) => {
         if (pCategory == 'todos') {
             db.query('SELECT * FROM posts where type = ?', [pType], (error, rows) => {

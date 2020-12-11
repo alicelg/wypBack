@@ -3,8 +3,6 @@ const { getByEmail } = require('../models/user');
 
 
 const checkToken = async (req, res, next) => {
-    console.log('aqui');
-
     if (process.env.MIDDLEWARE_ACTIVE == 'OFF') {
         return next()
     }

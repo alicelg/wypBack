@@ -24,7 +24,6 @@ router.get('/', async (req, res) => {
     }
 
     if (query.concepts != 'null') {
-      console.log(query, query.concepts);
       const translateKeys = getTranslateKey(query.searchTerm)
       if (translateKeys.length) {
         const translateKeysRefined = translateKeys.map(translateKey => 'CONCEPT.' + translateKey)
