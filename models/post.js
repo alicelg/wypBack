@@ -3,13 +3,15 @@
 /* GET */
 
 /* recuperar todos los conceptos */
-const getAllPosts = () => {
+const getAllPosts = (pType) => {
     return new Promise((resolve, reject) => {
-        db.query('SELECT * FROM posts', (error, rows) => {
+        db.query('SELECT * FROM posts where type = ?', [pType], (error, rows) => {
             if (error) reject(error);
-            resolve(rows)
+            if (rows.length === 0) resolve(null);
+            resolve(rows);
         });
     });
+    
 }
 
 /* recupero un post por id para poderlo visualizar en detalle en front*/

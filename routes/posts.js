@@ -3,8 +3,9 @@ const { getAllPosts, getPostById, getPostsByCategory } = require('../models/post
 
 /* GetAllPosts  visualizo todos los posts*/
 router.get('/', async (req, res) => {
+    const type = req.query.type;
     try {
-        const rows = await getAllPosts();
+        const rows = await getAllPosts(type);
         res.json(rows);
     } catch (error) {
         res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
