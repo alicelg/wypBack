@@ -53,13 +53,20 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     return res.status(400).json({ error: process.env.RESPONSE_UNAUTHORIZED });
   }
-
 })
 
 function createJwtToken(user) {
+
   const obj = {
-    userId: user.id,
+    id: user.id,
+    name: user.name,
+    surname: user.surname,
     email: user.email,
+    studies: user.studies,
+    currentWork: user.current_work,
+    photo: user.photo,
+    nickname: user.nickname,
+    registerDate: user.date,
     userRole: user.role
   }
 
