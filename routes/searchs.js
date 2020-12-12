@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { getPostByTitleType } = require('../models/post');
 const { getConceptsByTitle } = require('../models/concept');
+const { getCountriesByname } = require('../models/country')
 
 const esES = require('../translate/es-ES.json')
 const enGB = require('../translate/en-GB.json')
@@ -20,10 +21,10 @@ router.get('/', async (req, res) => {
     }
 
     if (query.blogs.includes('2')) {
-      hablandoPostsRows = await getPostByTitleType(query.searchTerm, 2);
+      hablandoPostsRows = await getPostByTitleType(query.searchTerm.toLowerCase(), 2);
     }
 
-    if (query.concepts != 'null') {
+    if (query.concepts != 'false') {
       const translateKeys = getTranslateKey(query.searchTerm)
       if (translateKeys.length) {
         const translateKeysRefined = translateKeys.map(translateKey => 'CONCEPT.' + translateKey)
@@ -31,10 +32,15 @@ router.get('/', async (req, res) => {
       }
     }
 
+    if (query.countries != 'false') {
+      countriesRows = await getCountriesByname(query.searchTerm.toLowerCase());
+    }
+
     const response = {
       generalPosts: await generalPostsRows,
       hablandoPosts: await hablandoPostsRows,
-      concepts: await conceptsRows
+      concepts: await conceptsRows,
+      countries: await countriesRows
     }
 
     res.json(response);
@@ -45,9 +51,9 @@ router.get('/', async (req, res) => {
 });
 
 function getTranslateKey(term) {
-  const esESResult= Object.keys(esES).filter(key => esES[key].toLowerCase().includes(term.toLowerCase()));
+  const esESResult = Object.keys(esES).filter(key => esES[key].toLowerCase().includes(term.toLowerCase()));
   const enGBResult = Object.keys(enGB).filter(key => enGB[key].toLowerCase().includes(term.toLowerCase()));
-  
+
   return esESResult.concat(enGBResult);
 }
 
