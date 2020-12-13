@@ -15,6 +15,7 @@ const conceptsRouter = require('./routes/concepts');
 const postsRouter = require('./routes/posts');
 const searchRouter = require('./routes/searchs');
 const countriesRouter = require('./routes/countries');
+const testsRouter = require('./routes/tests');
 
 
 const app = express();
@@ -37,6 +38,8 @@ app.use('/concepts', conceptsRouter);
 app.use('/posts', postsRouter);
 app.use('/search', searchRouter);
 app.use('/countries', countriesRouter);
+app.use('/tests', testsRouter);
+
 
 
 // catch 404 and forward to error handler

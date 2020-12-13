@@ -39,3 +39,6 @@ GET http://localhost:3000/posts/3
 GET http://localhost:3000/search?searchTerm=Nación&&blogs=1&&blogs=2&&concepts=all
 
 
+###
+GET http://localhost:3000/tests/1/questions
+
