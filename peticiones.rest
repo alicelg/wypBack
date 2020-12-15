@@ -25,7 +25,7 @@ Content-Type: application/json
 //GetAllConcepts 
 ###
 GET http://localhost:3000/concepts
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoicGVwYUB1Y20uZXMiLCJ1c2VyUm9sZSI6InVzZXIiLCJpYXQiOjE2MDczNTkxNTEsImV4cCI6MTYwNzUzMTk1MX0.At4POv7YleTOFiU2oziYFOqutzIjQfbwFjFzLuyCD98
+
 
 //GetAllPosts
 ###
@@ -33,7 +33,7 @@ GET http://localhost:3000/posts
 
 //GetByPostId
 ###
-GET http://localhost:3000/posts/3
+GET http://localhost:3000/posts/6
 
 ###
 GET http://localhost:3000/search?searchTerm=Nación&&blogs=1&&blogs=2&&concepts=all
@@ -41,4 +41,9 @@ GET http://localhost:3000/search?searchTerm=Nación&&blogs=1&&blogs=2&&concepts=
 
 ###
 GET http://localhost:3000/tests/1/questions
+
+
+//paginación de los conceptos
+###
+GET http://localhost:3000/concepts/page/0
 
