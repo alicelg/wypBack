@@ -78,15 +78,21 @@ function createJwtToken(user) {
 
 /* editar los datos del usuario */
 
-router.post('/update', async (req, res) => {
-  console.log(req.body);
+router.put('/update', async (req, res) => {
 
-  /* ejecuto el update sobre la base de datos */
-  const result = await updateById(req.body.email, req.body)
-  console.log(result);
+  try {
+    const result = await updateById(req.body.email, req.body);
+    if (result.affectedRows === 1) {
+      const newdata = await getByEmail(req.body.email);
+      res.json({ user: newdata });
+    } else {
+      res.json({ error: 'Sin actualizar' });
+    }
 
-  /* redirijo al cliente editado  */
-  res.json(result);
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+
 })
 
 module.exports = router;

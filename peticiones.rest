@@ -47,3 +47,13 @@ GET http://localhost:3000/tests/1/questions
 ###
 GET http://localhost:3000/concepts/page/0
 
+
+//paginación de los conceptos
+###
+POST http://localhost:3000/concepts/favorite
+Content-Type: application/json
+
+
+{
+    "idconcepto":1
+}

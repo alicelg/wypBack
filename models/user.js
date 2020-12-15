@@ -45,7 +45,6 @@ const updateById = (pEmail, { name, surname, studies, current_work, photo, nickn
             resolve(result);
         });
     });
-
 }
 
 
