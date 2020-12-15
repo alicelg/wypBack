@@ -36,6 +36,19 @@ const create = ({ nickname, email, password }) => {
     });
 };
 
+/* Editar usuario  */
+
+const updateById = (pEmail, { name, surname, studies, current_work, photo, nickname, country, linkedin }) => {
+    return new Promise((resolve, reject) => {
+        db.query('UPDATE users SET name =?, surname=?, studies=?, current_work=?, photo=?, nickname=?, country=?, linkedin=? WHERE email =?', [name, surname, studies, current_work, photo, nickname, country, linkedin, pEmail], (error, result) => {
+            if (error) reject(error);
+            resolve(result);
+        });
+    });
+
+}
+
+
 module.exports = {
-    getAll, create, getByEmail
+    getAll, create, getByEmail, updateById
 }

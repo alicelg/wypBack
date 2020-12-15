@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { getAll, create, getByEmail } = require('../models/user');
+const { getAll, create, getByEmail, updateById } = require('../models/user');
 
 
 /* GETALL usuarios */
@@ -28,7 +28,7 @@ router.post('/create', async (req, res) => {
       return res.status(400).json({ error: process.env.RESPONSE_ALREADY_EXISTS })
     } else {
       return res.status(400).json({ error: process.env.RESPONSE_ERROR_ON_SAVE })
-    } ;
+    };
   }
 });
 
@@ -67,10 +67,26 @@ function createJwtToken(user) {
     photo: user.photo,
     nickname: user.nickname,
     registerDate: user.date,
-    userRole: user.role
+    userRole: user.role,
+    linkedin: user.linkedin,
+    country: user.country
+
   }
 
   return jwt.sign(obj, process.env.SECRET_KEY, { expiresIn: '48h' });
 }
+
+/* editar los datos del usuario */
+
+router.post('/update', async (req, res) => {
+  console.log(req.body);
+
+  /* ejecuto el update sobre la base de datos */
+  const result = await updateById(req.body.email, req.body)
+  console.log(result);
+
+  /* redirijo al cliente editado  */
+  res.json(result);
+})
 
 module.exports = router;
