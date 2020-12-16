@@ -32,9 +32,9 @@ const checkToken = async (req, res, next) => {
 }
 
 const getToken = async (req, res, next) => {
-    console.log(req.headers);
-
-    const token = req.headers.authorization;
+    /* console.log(req.headers);
+ */
+    const token = req.headers.authorization.split(" ")[1];;
 
     req.user = jwt.verify(token, process.env.SECRET_KEY);
 

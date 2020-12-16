@@ -46,7 +46,7 @@ router.get('/category/:type/:category', (req, res) => {
 /* creo un post  */
 
 router.post('/new', getToken, async (req, res) => {
-    console.log('hola alice');
+
     try {
         const result = await createPost(req.user.id, req.body);
 
@@ -67,5 +67,31 @@ router.post('/new', getToken, async (req, res) => {
 
 
 });
+
+/* creo un comentario de un post  */
+
+router.post('/comment', getToken, async (req, res) => {
+    console.log('hola');
+    try {
+        const result = await createComment(req.user.id, req.body);
+
+        if (result.affectedRows === 1) {
+            const newComment = await getPostById(result.insertId);
+            res.json({
+                mensaje: 'New comment',
+                post: newComment
+            });
+
+        } else {
+            res.json({ error: 'No se agrego su comment' });
+        }
+    } catch (error) {
+        res.json({ error: error.message });
+
+    }
+
+
+});
+
 
 module.exports = router;

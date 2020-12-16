@@ -77,3 +77,15 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IlBlcGEi
     "type":"1"
 
 }
+
+
+###
+POST http://localhost:3000/posts/comment
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IlBlcGEiLCJzdXJuYW1lIjoiTMOzcGV6IFZhbGxlam8iLCJlbWFpbCI6InBlcGFAdWNtLmVzIiwic3R1ZGllcyI6InNvY2lvbG9nYSIsImN1cnJlbnRXb3JrIjoicHJvZmVzb3JhIiwicGhvdG8iOiJodHRwczovL3RvcnR1Z2FzLm1hc2NvdGFob2dhci5jb20vSW1hZ2VuZXMvdG9ydHVnYS10aWdyZS1kZS1yaW8tc2FsdmFqZS5qcGciLCJuaWNrbmFtZSI6IlBlcGEiLCJyZWdpc3RlckRhdGUiOiIyMDIwLTExLTI5VDAwOjQ5OjE5LjAwMFoiLCJ1c2VyUm9sZSI6InVzZXIiLCJsaW5rZWRpbiI6IlBlcGEiLCJjb3VudHJ5IjoiRXNwYcOxYSIsImlhdCI6MTYwODExMDExOCwiZXhwIjoxNjA4MjgyOTE4fQ.V3jDOtsMT_SI2mws06OkhvVW4WXSlFKVJ3aDSdNQZGw
+
+{
+    "text":"PRUEBA 1",
+    "post_id":"6"
+}
+
