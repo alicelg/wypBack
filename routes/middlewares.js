@@ -28,12 +28,19 @@ const checkToken = async (req, res, next) => {
         } catch (err) {
             return res.status(403).json({ error: process.env.RESPONSE_UNAUTHORIZED });
         }
-
-
-
     }
 }
 
+const getToken = async (req, res, next) => {
+    console.log(req.headers);
+
+    const token = req.headers.authorization;
+
+    req.user = jwt.verify(token, process.env.SECRET_KEY);
+
+    next();
+}
+
 module.exports = {
-    checkToken
+    checkToken, getToken
 }

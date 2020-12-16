@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const { getAllPosts, getPostById, getPostsByCategory } = require('../models/post');
+const { getAllPosts, getPostById, getPostsByCategory, createPost } = require('../models/post');
+const { getToken } = require('./middlewares');
 
 /* GetAllPosts  visualizo todos los posts*/
 router.get('/', async (req, res) => {
@@ -32,7 +33,7 @@ router.get('/category/:type/:category', (req, res) => {
     const type = req.params.type;
 
 
-    getPostsByCategory(category,type)
+    getPostsByCategory(category, type)
         .then(posts => {
             res.json(posts);
         })
@@ -41,5 +42,30 @@ router.get('/category/:type/:category', (req, res) => {
         });
 })
 
+
+/* creo un post  */
+
+router.post('/new', getToken, async (req, res) => {
+    console.log('hola alice');
+    try {
+        const result = await createPost(req.user.id, req.body);
+
+        if (result.affectedRows === 1) {
+            const newPost = await getPostById(result.insertId);
+            res.json({
+                mensaje: 'New post',
+                post: newPost
+            });
+
+        } else {
+            res.json({ error: 'No se agrego post' });
+        }
+    } catch (error) {
+        res.json({ error: error.message });
+
+    }
+
+
+});
 
 module.exports = router;

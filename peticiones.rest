@@ -52,13 +52,28 @@ GET http://localhost:3000/concepts/page/0
 ###
 POST http://localhost:3000/concepts/favorite
 Content-Type: application/json
-
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IlBlcGEiLCJzdXJuYW1lIjoiTMOzcGV6IFZhbGxlam8iLCJlbWFpbCI6InBlcGFAdWNtLmVzIiwic3R1ZGllcyI6InNvY2lvbG9nYSIsImN1cnJlbnRXb3JrIjoicHJvZmVzb3JhIiwicGhvdG8iOiJodHRwczovL3RvcnR1Z2FzLm1hc2NvdGFob2dhci5jb20vSW1hZ2VuZXMvdG9ydHVnYS10aWdyZS1kZS1yaW8tc2FsdmFqZS5qcGciLCJuaWNrbmFtZSI6IlBlcGEiLCJyZWdpc3RlckRhdGUiOiIyMDIwLTExLTI5VDAwOjQ5OjE5LjAwMFoiLCJ1c2VyUm9sZSI6InVzZXIiLCJsaW5rZWRpbiI6IlBlcGEiLCJjb3VudHJ5IjoiRXNwYcOxYSIsImlhdCI6MTYwODExMjU5NCwiZXhwIjoxNjA4Mjg1Mzk0fQ.NRzM4jMxwXydMVQ5sSea5A6tbjmFQA4JsBTMVMN5U0k
 
 {
     "idconcepto":1
 }
+
 ###
-
-
 GET http://localhost:3000/users/concepts
+
+
 ###
+POST http://localhost:3000/posts/new
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IlBlcGEiLCJzdXJuYW1lIjoiTMOzcGV6IFZhbGxlam8iLCJlbWFpbCI6InBlcGFAdWNtLmVzIiwic3R1ZGllcyI6InNvY2lvbG9nYSIsImN1cnJlbnRXb3JrIjoicHJvZmVzb3JhIiwicGhvdG8iOiJodHRwczovL3RvcnR1Z2FzLm1hc2NvdGFob2dhci5jb20vSW1hZ2VuZXMvdG9ydHVnYS10aWdyZS1kZS1yaW8tc2FsdmFqZS5qcGciLCJuaWNrbmFtZSI6IlBlcGEiLCJyZWdpc3RlckRhdGUiOiIyMDIwLTExLTI5VDAwOjQ5OjE5LjAwMFoiLCJ1c2VyUm9sZSI6InVzZXIiLCJsaW5rZWRpbiI6IlBlcGEiLCJjb3VudHJ5IjoiRXNwYcOxYSIsImlhdCI6MTYwODExMDExOCwiZXhwIjoxNjA4MjgyOTE4fQ.V3jDOtsMT_SI2mws06OkhvVW4WXSlFKVJ3aDSdNQZGw
+
+{
+    "title":"PRUEBA 2",
+    "main_image":"foto",
+    "category":"política",
+    "keywords":"politica, back, prueba",
+    "text":"fasagfsrfsadf",
+    "summary":"dfasdffadf",
+    "type":"1"
+
+}
