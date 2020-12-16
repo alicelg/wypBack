@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const { getAllConcepts, getConceptsByTitle, getConceptsByPage, insertFavorite } = require('../models/concept');
+const jwt = require('jsonwebtoken');
+
 
 /* GetAllConcepts  */
 router.get('/', async (req, res) => {
@@ -40,7 +42,11 @@ router.get('/page/:pPagina', (req, res) => {
 router.post('/favorite', (req, res) => {
     console.log(req.body);
 
-    insertFavorite(req.body.idconcepto)
+    const token = req.headers.authorization.split(" ")[1];
+    const user = jwt.verify(token, process.env.SECRET_KEY);
+
+
+    insertFavorite(user.id, req.body.conceptId)
         .then(favorite => {
             res.json(favorite);
         }

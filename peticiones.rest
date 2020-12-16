@@ -57,3 +57,8 @@ Content-Type: application/json
 {
     "idconcepto":1
 }
+###
+
+
+GET http://localhost:3000/users/concepts
+###

@@ -34,22 +34,29 @@ const getConceptsByPage = (pPagina) => {
 }
 
 
-const insertFavorite = (favorite) => {
-    const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, process.env.SECRET_KEY);
-
-    const idUsuario = user.id;
-    const confavorite = favorite;
-    console.log(confavorite);
+const insertFavorite = (pUserId, pConceptId) => {
+    console.log(pConceptId);
 
     return new Promise((resolve, reject) => {
-        db.query('INSERT INTO favorite_concepts (fk_user, fk_concept) VALUES (?,?)', [idUsuario, confavorite], (error, rows) => {
+        db.query('INSERT INTO favorite_concepts (user_id, concept_id) VALUES (?,?)', [pUserId, pConceptId], (error, rows) => {
             if (error) reject(error);
             resolve(rows)
         });
     });
 }
 
+
+const getConceptsByUser = (pUserId) => {
+
+    return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM favorite_concepts INNER JOIN concepts ON favorite_concepts.concept_id = concepts.id WHERE favorite_concepts.user_id = ?', [pUserId], (error, rows) => {
+            if (error) reject(error);
+            resolve(rows)
+        });
+    });
+
+}
+
 module.exports = {
-    getAllConcepts, getConceptsByTitle, getConceptsByPage, insertFavorite
+    getAllConcepts, getConceptsByTitle, getConceptsByPage, insertFavorite, getConceptsByUser
 }
