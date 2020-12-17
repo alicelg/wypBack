@@ -122,7 +122,7 @@ router.get('/posts', async (req, res) => {
 
   try {
     const favorite_post = await getPostByUser(user.id);
-    res.json({ concepts: favorite_post })
+    res.json({ posts: favorite_post })
 
   } catch (error) {
     res.json({ error: error.message });

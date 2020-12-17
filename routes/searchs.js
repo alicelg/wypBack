@@ -15,6 +15,7 @@ router.get('/', async (req, res) => {
     let generalPostsRows;
     let hablandoPostsRows;
     let conceptsRows;
+    let countriesRows;
 
     if (query.blogs.includes('1')) {
       generalPostsRows = await getPostByTitleType(query.searchTerm.toLowerCase(), 1);
