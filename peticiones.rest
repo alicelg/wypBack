@@ -58,17 +58,19 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IlBlcGEi
     "idconcepto":1
 }
 
+// añadir conceptos al usuario
 ###
 GET http://localhost:3000/users/concepts
 
+//agregar nuevo post
 
 ###
 POST http://localhost:3000/posts/new
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IlBlcGEiLCJzdXJuYW1lIjoiTMOzcGV6IFZhbGxlam8iLCJlbWFpbCI6InBlcGFAdWNtLmVzIiwic3R1ZGllcyI6InNvY2lvbG9nYSIsImN1cnJlbnRXb3JrIjoicHJvZmVzb3JhIiwicGhvdG8iOiJodHRwczovL3RvcnR1Z2FzLm1hc2NvdGFob2dhci5jb20vSW1hZ2VuZXMvdG9ydHVnYS10aWdyZS1kZS1yaW8tc2FsdmFqZS5qcGciLCJuaWNrbmFtZSI6IlBlcGEiLCJyZWdpc3RlckRhdGUiOiIyMDIwLTExLTI5VDAwOjQ5OjE5LjAwMFoiLCJ1c2VyUm9sZSI6InVzZXIiLCJsaW5rZWRpbiI6IlBlcGEiLCJjb3VudHJ5IjoiRXNwYcOxYSIsImlhdCI6MTYwODExMDExOCwiZXhwIjoxNjA4MjgyOTE4fQ.V3jDOtsMT_SI2mws06OkhvVW4WXSlFKVJ3aDSdNQZGw
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IlBlcGEiLCJzdXJuYW1lIjoiTMOzcGV6IFZhbGxlam8iLCJlbWFpbCI6InBlcGFAdWNtLmVzIiwic3R1ZGllcyI6InNvY2lvbG9nYSIsImN1cnJlbnRXb3JrIjoicHJvZmVzb3JhIiwicGhvdG8iOiJodHRwczovL3RvcnR1Z2FzLm1hc2NvdGFob2dhci5jb20vSW1hZ2VuZXMvdG9ydHVnYS10aWdyZS1kZS1yaW8tc2FsdmFqZS5qcGciLCJuaWNrbmFtZSI6IlBlcGEiLCJyZWdpc3RlckRhdGUiOiIyMDIwLTExLTI5VDAwOjQ5OjE5LjAwMFoiLCJ1c2VyUm9sZSI6InVzZXIiLCJsaW5rZWRpbiI6IlBlcGEiLCJjb3VudHJ5IjoiRXNwYcOxYSIsImlhdCI6MTYwODIwMjI2MCwiZXhwIjoxNjA4Mzc1MDYwfQ.xTLwp7ZcWQiCly_I5k6fkPITESSWB5DcIikZuyMro2I
 
 {
-    "title":"PRUEBA 2",
+    "title":"PRUEBA 5",
     "main_image":"foto",
     "category":"política",
     "keywords":"politica, back, prueba",
@@ -78,6 +80,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IlBlcGEi
 
 }
 
+//agregar comentario
 
 ###
 POST http://localhost:3000/posts/comment

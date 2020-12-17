@@ -65,6 +65,28 @@ const createPost = (userId, { title, main_image, category, keywords, text, summa
     });
 };
 
+const insertFavorite = (pUserId, pPostId) => {
+
+
+    return new Promise((resolve, reject) => {
+        db.query('INSERT INTO user_post (user_id, post_id) VALUES (?,?)', [pUserId, pPostId], (error, rows) => {
+            if (error) reject(error);
+            resolve(rows)
+        });
+    });
+}
+
+const getPostByUser = (pUserId) => {
+
+    return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM user_post INNER JOIN posts ON user_post.post_id = post.id WHERE user_post.user_id = ?', [pUserId], (error, rows) => {
+            if (error) reject(error);
+            resolve(rows)
+        });
+    });
+
+}
+
 module.exports = {
-    getAllPosts, getPostById, getPostByTitleType, getPostsByCategory, createPost
+    getAllPosts, getPostById, getPostByTitleType, getPostsByCategory, createPost, insertFavorite, getPostByUser
 }

@@ -2,7 +2,8 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { getAll, create, getByEmail, updateById } = require('../models/user');
-const { getConceptsByUser } = require('../models/concept')
+const { getConceptsByUser } = require('../models/concept');
+const { getPostByUser } = require('../models/post');
 
 
 
@@ -97,14 +98,31 @@ router.put('/update', async (req, res) => {
 
 })
 
+/* conceptos favoritos */
+
 router.get('/concepts', async (req, res) => {
-  console.log('aqui');
   const token = req.headers.authorization.split(" ")[1];
   const user = jwt.verify(token, process.env.SECRET_KEY);
 
   try {
     const favorite_concepts = await getConceptsByUser(user.id);
     res.json({ concepts: favorite_concepts })
+
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+});
+
+
+/* post favoritos */
+
+router.get('/posts', async (req, res) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const user = jwt.verify(token, process.env.SECRET_KEY);
+
+  try {
+    const favorite_post = await getPostByUser(user.id);
+    res.json({ concepts: favorite_post })
 
   } catch (error) {
     res.json({ error: error.message });

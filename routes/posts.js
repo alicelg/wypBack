@@ -1,6 +1,7 @@
 const router = require('express').Router();
-const { getAllPosts, getPostById, getPostsByCategory, createPost } = require('../models/post');
+const { getAllPosts, getPostById, getPostsByCategory, createPost, insertFavorite } = require('../models/post');
 const { getToken } = require('./middlewares');
+const jwt = require('jsonwebtoken');
 
 /* GetAllPosts  visualizo todos los posts*/
 router.get('/', async (req, res) => {
@@ -89,9 +90,28 @@ router.post('/comment', getToken, async (req, res) => {
         res.json({ error: error.message });
 
     }
-
-
 });
+
+
+/* ruta para favoritos post */
+router.post('/favorite', (req, res) => {
+    console.log(req.body);
+
+    const token = req.headers.authorization.split(" ")[1];
+    const user = jwt.verify(token, process.env.SECRET_KEY);
+
+
+    insertFavorite(user.id, req.body.postId)
+        .then(favorite => {
+            res.json(favorite);
+        }
+
+        )
+    /* .catch(error => {
+        res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
+    });
+*/
+})
 
 
 module.exports = router;
