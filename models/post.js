@@ -79,7 +79,7 @@ const insertFavorite = (pUserId, pPostId) => {
 const getPostByUser = (pUserId) => {
 
     return new Promise((resolve, reject) => {
-        db.query('SELECT * FROM user_post INNER JOIN posts ON user_post.post_id = post.id WHERE user_post.user_id = ?', [pUserId], (error, rows) => {
+        db.query('SELECT * FROM user_post INNER JOIN posts ON user_post.post_id = posts.id WHERE user_post.user_id = ?', [pUserId], (error, rows) => {
             if (error) reject(error);
             resolve(rows)
         });
