@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getAllPosts, getPostById, getPostsByCategory, createPost, insertFavorite, deleteFavorite } = require('../models/post');
+const { getAllPosts, getPostById, getPostsByCategory, insertFavorite, deleteFavorite, createPost, createComment } = require('../models/post');
 const { getToken } = require('./middlewares');
 const jwt = require('jsonwebtoken');
 
@@ -69,28 +69,6 @@ router.post('/new', getToken, async (req, res) => {
 
 });
 
-/* creo un comentario de un post  */
-
-router.post('/comment', getToken, async (req, res) => {
-    console.log('hola');
-    try {
-        const result = await createComment(req.user.id, req.body);
-
-        if (result.affectedRows === 1) {
-            const newComment = await getPostById(result.insertId);
-            res.json({
-                mensaje: 'New comment',
-                post: newComment
-            });
-
-        } else {
-            res.json({ error: 'No se agrego su comment' });
-        }
-    } catch (error) {
-        res.json({ error: error.message });
-
-    }
-});
 
 
 /* ruta para favoritos post */
@@ -126,5 +104,23 @@ router.delete('/nofav', (req, res) => {
             res.json(favorite);
         })
 })
+
+
+/* creo un comentario de un post  */
+router.post('/comment', getToken, async (req, res) => {
+    console.log('hola');
+    try {
+        const result = await createComment(req.user.id, req.body.text, req.body.postId);
+
+        if (result.affectedRows === 1) {
+            res.json(result);
+        } else {
+            res.json({ error: 'No se agrego su comment' });
+        }
+    } catch (error) {
+        res.json({ error: error.message });
+    }
+});
+
 
 module.exports = router;

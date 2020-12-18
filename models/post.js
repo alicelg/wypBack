@@ -11,7 +11,6 @@ const getAllPosts = (pType) => {
             resolve(rows);
         });
     });
-
 }
 
 /* recupero un post por id para poderlo visualizar en detalle en front*/
@@ -68,8 +67,6 @@ const createPost = (userId, { title, main_image, category, keywords, text, summa
 /* añado post favoritos del usuario */
 
 const insertFavorite = (pUserId, pPostId) => {
-
-
     return new Promise((resolve, reject) => {
         db.query('INSERT INTO user_post (user_id, post_id) VALUES (?,?)', [pUserId, pPostId], (error, rows) => {
             if (error) reject(error);
@@ -81,18 +78,15 @@ const insertFavorite = (pUserId, pPostId) => {
 /* los post favoritos de usuario */
 
 const getPostByUser = (pUserId) => {
-
     return new Promise((resolve, reject) => {
         db.query('SELECT * FROM user_post INNER JOIN posts ON user_post.post_id = posts.id WHERE user_post.user_id = ?', [pUserId], (error, rows) => {
             if (error) reject(error);
             resolve(rows)
         });
     });
-
 }
 
 /* elimino el post de mis favoritos */
-
 const deleteFavorite = (pUserId, pPostId) => {
     return new Promise((resolve, reject) => {
         db.query('DELETE FROM user_post WHERE user_id = ? AND post_id = ?', [pUserId, pPostId], (error, rows) => {
@@ -102,6 +96,16 @@ const deleteFavorite = (pUserId, pPostId) => {
     });
 }
 
+/* Crear un comentario */
+const createComment = (pUserId, pText, pPostId) => {
+    return new Promise((resolve, reject) => {
+        db.query('INSERT INTO comments(user_id, text, post_id) VALUES(?,?,?)', [pUserId, pText, pPostId], (error, result) => {
+            if (error) reject(error);
+            resolve(result);
+        });
+    });
+}
+
 module.exports = {
-    getAllPosts, getPostById, getPostByTitleType, getPostsByCategory, createPost, insertFavorite, getPostByUser, deleteFavorite
+    getAllPosts, getPostById, getPostByTitleType, getPostsByCategory, createPost, insertFavorite, getPostByUser, deleteFavorite, createComment
 }
