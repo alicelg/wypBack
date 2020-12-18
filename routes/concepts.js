@@ -69,10 +69,6 @@ router.delete('/favorite', (req, res) => {
         .then(favorite => {
             res.json(favorite);
         })
-    /* .catch(error => {
-        res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
-    });
-*/
 })
 
 
