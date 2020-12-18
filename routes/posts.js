@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getAllPosts, getPostById, getPostsByCategory, createPost, insertFavorite } = require('../models/post');
+const { getAllPosts, getPostById, getPostsByCategory, createPost, insertFavorite, deleteFavorite } = require('../models/post');
 const { getToken } = require('./middlewares');
 const jwt = require('jsonwebtoken');
 
@@ -113,5 +113,18 @@ router.post('/favorite', (req, res) => {
 */
 })
 
+
+/* ruta para eliminar de favoritos los posts */
+router.delete('/nofav', (req, res) => {
+
+    const token = req.headers.authorization.split(" ")[1];
+    const user = jwt.verify(token, process.env.SECRET_KEY);
+
+
+    deleteFavorite(user.id, req.query.postId)
+        .then(favorite => {
+            res.json(favorite);
+        })
+})
 
 module.exports = router;

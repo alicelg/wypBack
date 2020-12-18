@@ -65,6 +65,8 @@ const createPost = (userId, { title, main_image, category, keywords, text, summa
     });
 };
 
+/* añado post favoritos del usuario */
+
 const insertFavorite = (pUserId, pPostId) => {
 
 
@@ -75,6 +77,8 @@ const insertFavorite = (pUserId, pPostId) => {
         });
     });
 }
+
+/* los post favoritos de usuario */
 
 const getPostByUser = (pUserId) => {
 
@@ -87,6 +91,17 @@ const getPostByUser = (pUserId) => {
 
 }
 
+/* elimino el post de mis favoritos */
+
+const deleteFavorite = (pUserId, pPostId) => {
+    return new Promise((resolve, reject) => {
+        db.query('DELETE FROM user_post WHERE user_id = ? AND post_id = ?', [pUserId, pPostId], (error, rows) => {
+            if (error) reject(error);
+            resolve(rows)
+        });
+    });
+}
+
 module.exports = {
-    getAllPosts, getPostById, getPostByTitleType, getPostsByCategory, createPost, insertFavorite, getPostByUser
+    getAllPosts, getPostById, getPostByTitleType, getPostsByCategory, createPost, insertFavorite, getPostByUser, deleteFavorite
 }
