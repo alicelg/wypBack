@@ -58,7 +58,7 @@ const getPostsByCategory = (pCategory, pType) => {
 /* crear un post*/
 const createPost = (userId, { title, main_image, category, keywords, text, summary, type }) => {
     return new Promise((resolve, reject) => {
-        db.query('INSERT INTO posts(title, main_image, category, keywords, text, summary, date, user_id, type) values(?,?,?,?,?,?,?,?,?)', [title, main_image, category, keywords, text, summary, new Date(), userId, type], (error, result) => {
+        db.query('INSERT INTO posts(title, main_image, category, keywords, text, summary, date, user_id, type) values(?,?,?,?,?,?,?,?,1)', [title, main_image, category, keywords, text, summary, new Date(), userId, type = 1], (error, result) => {
             if (error) reject(error);
             resolve(result);
         });
