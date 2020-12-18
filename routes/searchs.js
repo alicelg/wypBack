@@ -30,6 +30,7 @@ router.get('/', async (req, res) => {
       if (translateKeys.length) {
         const translateKeysRefined = translateKeys.map(translateKey => 'CONCEPT.' + translateKey)
         conceptsRows = await getConceptsByTitle(translateKeysRefined);
+
       }
     }
 

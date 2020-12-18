@@ -47,16 +47,23 @@ const insertFavorite = (pUserId, pConceptId) => {
 
 
 const getConceptsByUser = (pUserId) => {
-
     return new Promise((resolve, reject) => {
         db.query('SELECT * FROM favorite_concepts INNER JOIN concepts ON favorite_concepts.concept_id = concepts.id WHERE favorite_concepts.user_id = ?', [pUserId], (error, rows) => {
             if (error) reject(error);
             resolve(rows)
         });
     });
+}
 
+const deleteFavorite = (pUserId, pConceptId) => {
+    return new Promise((resolve, reject) => {
+        db.query('DELETE FROM favorite_concepts WHERE user_id = ? AND concept_id = ?', [pUserId, pConceptId], (error, rows) => {
+            if (error) reject(error);
+            resolve(rows)
+        });
+    });
 }
 
 module.exports = {
-    getAllConcepts, getConceptsByTitle, getConceptsByPage, insertFavorite, getConceptsByUser
+    getAllConcepts, getConceptsByTitle, getConceptsByPage, insertFavorite, getConceptsByUser, deleteFavorite
 }

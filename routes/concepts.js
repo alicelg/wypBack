@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getAllConcepts, getConceptsByTitle, getConceptsByPage, insertFavorite } = require('../models/concept');
+const { getAllConcepts, getConceptsByTitle, getConceptsByPage, insertFavorite, deleteFavorite } = require('../models/concept');
 const jwt = require('jsonwebtoken');
 
 
@@ -38,7 +38,7 @@ router.get('/page/:pPagina', (req, res) => {
     }); */
 })
 
-/* ruta para favoritos conceptos */
+/* ruta para añadir  favoritos conceptos */
 router.post('/favorite', (req, res) => {
     console.log(req.body);
 
@@ -52,6 +52,23 @@ router.post('/favorite', (req, res) => {
         }
 
         )
+    /* .catch(error => {
+        res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
+    });
+*/
+})
+
+/* ruta para eliminar favoritos conceptos */
+router.delete('/favorite', (req, res) => {
+
+    const token = req.headers.authorization.split(" ")[1];
+    const user = jwt.verify(token, process.env.SECRET_KEY);
+
+
+    deleteFavorite(user.id, req.query.conceptId)
+        .then(favorite => {
+            res.json(favorite);
+        })
     /* .catch(error => {
         res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
     });
