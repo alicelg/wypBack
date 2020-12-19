@@ -3,8 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { getAll, create, getByEmail, updateById } = require('../models/user');
 const { getConceptsByUser } = require('../models/concept');
-const { getPostByUser } = require('../models/post');
-
+const { getPostByUser, getPostCreatedByUser } = require('../models/post');
 
 
 /* GETALL usuarios */
@@ -115,7 +114,6 @@ router.get('/concepts', async (req, res) => {
 
 
 /* post favoritos */
-
 router.get('/posts', async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   const user = jwt.verify(token, process.env.SECRET_KEY);
@@ -123,6 +121,20 @@ router.get('/posts', async (req, res) => {
   try {
     const favorite_post = await getPostByUser(user.id);
     res.json({ posts: favorite_post })
+
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+});
+
+/* post creados */
+router.get('/created/posts', async (req, res) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const user = jwt.verify(token, process.env.SECRET_KEY);
+
+  try {
+    const postsCreated = await getPostCreatedByUser(user.id);
+    res.json({ posts: postsCreated })
 
   } catch (error) {
     res.json({ error: error.message });

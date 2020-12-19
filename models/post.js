@@ -125,6 +125,26 @@ const deletePostById = (postId) => {
     });
 };
 
+/* edito un post */
+const updatePostById = (postId, { title, main_image, category, keywords, text, summary, type }) => {
+    return new Promise((resolve, reject) => {
+        db.query('UPDATE posts SET title = ?, main_image = ?, category = ?, keywords = ?, text = ?, summary = ?, type = ?', [title, main_image, category, keywords, text, summary, type = 1, postId], (error, result) => {
+            if (error) reject(error);
+            resolve(result);
+        });
+    });
+}
+
+// posts creador por el usuario
+const getPostCreatedByUser = (pUserId) => {
+    return new Promise((resolve, reject) => {
+        db.query('SELECT id, title FROM wyp_database.posts WHERE user_id = ?', [pUserId], (error, rows) => {
+            if (error) reject(error);
+            resolve(rows)
+        });
+    });
+}
+
 module.exports = {
-    getAllPosts, getPostById, getPostByTitleType, getPostsByCategory, createPost, insertFavorite, getPostByUser, deleteFavorite, createComment, getCommentsByPostId, deletePostById
+    getAllPosts, getPostById, getPostByTitleType, getPostsByCategory, createPost, insertFavorite, getPostByUser, deleteFavorite, createComment, getCommentsByPostId, deletePostById, updatePostById, getPostCreatedByUser
 }

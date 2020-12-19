@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getAllPosts, getPostById, getPostsByCategory, insertFavorite, deleteFavorite, createPost, createComment, getCommentsByPostId, deletePostById } = require('../models/post');
+const { getAllPosts, getPostById, getPostsByCategory, insertFavorite, deleteFavorite, createPost, createComment, getCommentsByPostId, deletePostById, getPostCreatedByUser } = require('../models/post');
 const { getToken } = require('./middlewares');
 const jwt = require('jsonwebtoken');
 
@@ -143,6 +143,36 @@ router.delete('/:postId', async (req, res) => {
     }
 });
 
+/* edito el post  */
+router.put('/:postId', async (req, res) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const user = jwt.verify(token, process.env.SECRET_KEY);
 
+    try {
+        const result = await updatePostById(user.id, req.body.postId, req.body);
+        if (result.affectedRows === 1) {
+            const editedPost = await getPostById(req.body.postId);
+            res.json({ editedPost: editedPost });
+        } else {
+            res.json({ error: 'No se ha podido actualizar' });
+        }
+    } catch (error) {
+        res.json({ error: error.message });
+    }
+});
+
+// visualizo los post creador por el usuario
+router.get('/created', async (req, res) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const user = jwt.verify(token, process.env.SECRET_KEY);
+
+    try {
+        const postsCreated = await getPostCreatedByUser(user.id);
+        res.json({ posts: postsCreated })
+
+    } catch (error) {
+        res.json({ error: error.message });
+    }
+});
 
 module.exports = router;
