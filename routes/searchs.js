@@ -18,11 +18,30 @@ router.get('/', async (req, res) => {
     let countriesRows;
 
     if (query.blogs.includes('1')) {
-      generalPostsRows = await getPostByTitleType(query.searchTerm.toLowerCase(), 1);
+      await getPostByTitleType(query.searchTerm.toLowerCase(), 1).then(posts => {
+        // editamos el objeto de la respuesta
+        const postsArray = [];
+        if (posts) {
+          posts.map(post => Object.keys(post).map(value => {
+            postsArray.push(JSON.parse(post[value]))
+          }));
+        }
+        generalPostsRows = postsArray;
+      })
+
     }
 
     if (query.blogs.includes('2')) {
-      hablandoPostsRows = await getPostByTitleType(query.searchTerm.toLowerCase(), 2);
+      await getPostByTitleType(query.searchTerm.toLowerCase(), 2).then(posts => {
+        // editamos el objeto de la respuesta
+        const postsArray = [];
+        if (posts) {
+          posts.map(post => Object.keys(post).map(value => {
+            postsArray.push(JSON.parse(post[value]))
+          }));
+        }
+        hablandoPostsRows = postsArray;
+      })
     }
 
     if (query.concepts != 'false') {

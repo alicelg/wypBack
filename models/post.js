@@ -3,9 +3,10 @@
 /* GET */
 
 /* recuperar todos los conceptos */
-const getAllPosts = (pType) => {
+const getAllPostsByType = (pType) => {
     return new Promise((resolve, reject) => {
-        db.query('SELECT * FROM posts where type = ? AND posts.delete = 0', [pType], (error, rows) => {
+        // enganchamos los datos del usuario formateados como objeto
+        db.query("SELECT json_object('id',posts.id,'main_image',posts.main_image,'title',posts.title,'keywords',posts.keywords,'category',posts.category, 'summary', posts.summary,'user',(SELECT json_object('id', id, 'nickname', nickname, 'photo', photo) FROM users WHERE id = posts.user_id))FROM posts WHERE posts.type = ? AND posts.delete = 0", [pType], (error, rows) => {
             if (error) reject(error);
             if (rows.length === 0) resolve(null);
             resolve(rows);
@@ -15,9 +16,9 @@ const getAllPosts = (pType) => {
 
 /* recupero un post por id para poderlo visualizar en detalle en front*/
 const getPostById = (pPostId) => {
-    console.log(pPostId);
     return new Promise((resolve, reject) => {
-        db.query('SELECT * FROM posts WHERE id = ? AND posts.delete = 0', [pPostId], (error, rows) => {
+        // enganchamos los datos del usuario formateados como objeto
+        db.query("SELECT json_object('id',posts.id,'main_image',posts.main_image,'title',posts.title,'keywords',posts.keywords,'category',posts.category, 'text', posts.text, 'user',(SELECT json_object('id', id, 'nickname', nickname, 'photo', photo) FROM users WHERE id = posts.user_id))FROM posts WHERE posts.id = ? AND posts.delete = 0", [pPostId], (error, rows) => {
             if (error) reject(error);
             if (rows.length === 0) resolve(null);
             resolve(rows[0]);
@@ -28,7 +29,8 @@ const getPostById = (pPostId) => {
 // busqueda de post por nombre y blog
 const getPostByTitleType = (pTitle, pType) => {
     return new Promise((resolve, reject) => {
-        const query = db.query("SELECT * FROM posts WHERE posts.title LIKE ? AND posts.type = ? AND posts.delete= 0", ['%' + pTitle + '%', pType], (error, rows) => {
+        // enganchamos los datos del usuario formateados como objeto
+        const query = db.query("SELECT json_object('id',posts.id,'main_image',posts.main_image,'title',posts.title,'keywords',posts.keywords,'category',posts.category, 'summary', posts.summary, 'user',(SELECT json_object('id', id, 'nickname', nickname, 'photo', photo) FROM users WHERE id = posts.user_id))FROM posts WHERE posts.title LIKE ? AND posts.type = ? AND posts.delete = 0", ['%' + pTitle + '%', pType], (error, rows) => {
             if (error) { console.log(error); reject(error) };
             if (rows.length === 0) resolve(null);
             resolve(rows);
@@ -40,14 +42,19 @@ const getPostByTitleType = (pTitle, pType) => {
 const getPostsByCategory = (pCategory, pType) => {
     return new Promise((resolve, reject) => {
         if (pCategory == 'todos') {
-            db.query('SELECT * FROM posts where type = ?', [pType], (error, rows) => {
+            // enganchamos los datos del usuario formateados como objeto
+            db.query("SELECT json_object('id',posts.id,'main_image',posts.main_image,'title',posts.title,'keywords',posts.keywords,'category',posts.category, 'summary', posts.summary, 'user',(SELECT json_object('id', id, 'nickname', nickname, 'photo', photo) FROM users WHERE id = posts.user_id))FROM posts WHERE posts.type = ? AND posts.delete = 0", [pType], (error, rows) => {
                 if (error) reject(error);
                 if (rows.length === 0) resolve(null);
                 resolve(rows);
             });
         } else {
-            db.query('SELECT * FROM posts WHERE category = ? AND type = ?', [pCategory, pType], (error, rows) => {
-                if (error) reject(error);
+            // enganchamos los datos del usuario formateados como objeto
+            db.query("SELECT json_object('id',posts.id,'main_image',posts.main_image,'title',posts.title,'keywords',posts.keywords,'category',posts.category, 'summary', posts.summary, 'user',(SELECT json_object('id', id, 'nickname', nickname, 'photo', photo) FROM users WHERE id = posts.user_id))FROM posts WHERE posts.category = ? AND posts.type = ? AND posts.delete = 0", [pCategory, pType], (error, rows) => {
+                if (error) {
+                    console.log(error);
+                    reject(error)
+                };
                 if (rows.length === 0) resolve(null);
                 resolve(rows);
             });
@@ -138,7 +145,8 @@ const updatePostById = ({ id, title, main_image, category, keywords, text, summa
 // posts creador por el usuario
 const getPostCreatedByUser = (pUserId) => {
     return new Promise((resolve, reject) => {
-        db.query('SELECT id, title FROM wyp_database.posts WHERE user_id = ?', [pUserId], (error, rows) => {
+        // enganchamos los datos del usuario formateados como objeto
+        db.query('SELECT id, title FROM wyp_database.posts WHERE user_id = ? AND posts.delete = 0', [pUserId], (error, rows) => {
             if (error) reject(error);
             resolve(rows)
         });
@@ -146,5 +154,5 @@ const getPostCreatedByUser = (pUserId) => {
 }
 
 module.exports = {
-    getAllPosts, getPostById, getPostByTitleType, getPostsByCategory, createPost, insertFavorite, getPostByUser, deleteFavorite, createComment, getCommentsByPostId, deletePostById, updatePostById, getPostCreatedByUser
+    getAllPostsByType, getPostById, getPostByTitleType, getPostsByCategory, createPost, insertFavorite, getPostByUser, deleteFavorite, createComment, getCommentsByPostId, deletePostById, updatePostById, getPostCreatedByUser
 }

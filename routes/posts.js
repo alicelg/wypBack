@@ -1,14 +1,20 @@
 const router = require('express').Router();
-const { getAllPosts, getPostById, getPostsByCategory, insertFavorite, deleteFavorite, createPost, createComment, getCommentsByPostId, deletePostById, getPostCreatedByUser, updatePostById } = require('../models/post');
+const { getAllPostsByType, getPostById, getPostsByCategory, insertFavorite, deleteFavorite, createPost, createComment, getCommentsByPostId, deletePostById, getPostCreatedByUser, updatePostById } = require('../models/post');
 const { getToken } = require('./middlewares');
 const jwt = require('jsonwebtoken');
 
-/* GetAllPosts  visualizo todos los posts*/
+/* getAllPostsByType  visualizo todos los posts*/
 router.get('/', async (req, res) => {
     const type = req.query.type;
     try {
-        const rows = await getAllPosts(type);
-        res.json(rows);
+        getAllPostsByType(type).then(posts => {
+            // editamos el objeto de la respuesta
+            const postsArray = [];
+            posts.map(post => Object.keys(post).map(value => {
+                postsArray.push(JSON.parse(post[value]))
+            }));
+            res.json(postsArray);
+        })
     } catch (error) {
         res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
     }
@@ -20,6 +26,11 @@ router.get('/:postId', (req, res) => {
 
     getPostById(postId).then(post => {
         if (post != null) {
+            // editamos el objeto de la respuesta
+            Object.keys(post).map(value => {
+                post = JSON.parse(post[value])
+            });
+
             getCommentsByPostId(postId).then(comments => {
                 const commentsArray = [];
                 comments.map(comment => Object.keys(comment).map(value => {
@@ -46,9 +57,17 @@ router.get('/category/:type/:category', (req, res) => {
 
     getPostsByCategory(category, type)
         .then(posts => {
-            res.json(posts);
+            // editamos el objeto de la respuesta
+            const postsArray = [];
+            if (posts) {
+                posts.map(post => Object.keys(post).map(value => {
+                    postsArray.push(JSON.parse(post[value]))
+                }));
+            }
+            res.json(postsArray);
         })
         .catch(error => {
+            console.log(error);
             res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
         });
 })
