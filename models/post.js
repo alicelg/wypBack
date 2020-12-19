@@ -65,7 +65,6 @@ const createPost = (userId, { title, main_image, category, keywords, text, summa
 };
 
 /* añado post favoritos del usuario */
-
 const insertFavorite = (pUserId, pPostId) => {
     return new Promise((resolve, reject) => {
         db.query('INSERT INTO user_post (user_id, post_id) VALUES (?,?)', [pUserId, pPostId], (error, rows) => {
@@ -76,7 +75,6 @@ const insertFavorite = (pUserId, pPostId) => {
 }
 
 /* los post favoritos de usuario */
-
 const getPostByUser = (pUserId) => {
     return new Promise((resolve, reject) => {
         db.query('SELECT * FROM user_post INNER JOIN posts ON user_post.post_id = posts.id WHERE user_post.user_id = ?', [pUserId], (error, rows) => {
@@ -106,6 +104,16 @@ const createComment = (pUserId, pText, pPostId) => {
     });
 }
 
+// Obtener comentarios por postId
+const getCommentsByPostId = (pPostId) => {
+    return new Promise((resolve, reject) => {
+        db.query("SELECT json_object('id',comments.id ,'text', comments.text,'user',(SELECT json_object('id',id,'nickname',nickname, 'photo',photo) FROM users WHERE id = comments.user_id)) FROM comments WHERE comments.post_id = ?", [pPostId], (error, rows) => {
+            if (error) reject(error);
+            resolve(rows)
+        });
+    });
+}
+
 module.exports = {
-    getAllPosts, getPostById, getPostByTitleType, getPostsByCategory, createPost, insertFavorite, getPostByUser, deleteFavorite, createComment
+    getAllPosts, getPostById, getPostByTitleType, getPostsByCategory, createPost, insertFavorite, getPostByUser, deleteFavorite, createComment, getCommentsByPostId
 }

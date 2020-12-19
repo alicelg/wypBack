@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getAllPosts, getPostById, getPostsByCategory, insertFavorite, deleteFavorite, createPost, createComment } = require('../models/post');
+const { getAllPosts, getPostById, getPostsByCategory, insertFavorite, deleteFavorite, createPost, createComment, getCommentsByPostId } = require('../models/post');
 const { getToken } = require('./middlewares');
 const jwt = require('jsonwebtoken');
 
@@ -15,24 +15,30 @@ router.get('/', async (req, res) => {
 });
 
 /* recupero por id un post para ver el detalle */
-
 router.get('/:postId', (req, res) => {
     const postId = req.params.postId;
 
-    getPostById(postId)
-        .then(post => {
+    getPostById(postId).then(post => {
+        getCommentsByPostId(postId).then(comments => {
+            const commentsArray = [];
+            comments.map(comment => Object.keys(comment).map(value => {
+                commentsArray.push(JSON.parse(comment[value]))
+            }));
+
+            post.comments = commentsArray;
             res.json(post);
         })
+    })
         .catch(error => {
+            console.log(error);
             res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
         });
 })
 
-/* recupero por id un post para ver el detalle */
+/* recuperación de posts por categoría */
 router.get('/category/:type/:category', (req, res) => {
     const category = req.params.category;
     const type = req.params.type;
-
 
     getPostsByCategory(category, type)
         .then(posts => {
@@ -45,31 +51,25 @@ router.get('/category/:type/:category', (req, res) => {
 
 
 /* creo un post  */
-
 router.post('/new', getToken, async (req, res) => {
 
     try {
         const result = await createPost(req.user.id, req.body);
-
         if (result.affectedRows === 1) {
             const newPost = await getPostById(result.insertId);
             res.json({
                 mensaje: 'New post',
                 post: newPost
             });
-
         } else {
             res.json({ error: 'No se agrego post' });
         }
+
     } catch (error) {
         res.json({ error: error.message });
 
     }
-
-
 });
-
-
 
 /* ruta para favoritos post */
 router.post('/favorite', (req, res) => {
@@ -78,17 +78,13 @@ router.post('/favorite', (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const user = jwt.verify(token, process.env.SECRET_KEY);
 
-
     insertFavorite(user.id, req.body.postId)
         .then(favorite => {
             res.json(favorite);
-        }
-
-        )
-    /* .catch(error => {
-        res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
-    });
-*/
+        })
+        .catch(error => {
+            res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
+        });
 })
 
 
@@ -98,17 +94,17 @@ router.delete('/nofav', (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const user = jwt.verify(token, process.env.SECRET_KEY);
 
-
     deleteFavorite(user.id, req.query.postId)
         .then(favorite => {
             res.json(favorite);
-        })
+        }).catch(error => {
+            res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
+        });
 })
 
 
 /* creo un comentario de un post  */
 router.post('/comment', getToken, async (req, res) => {
-    console.log('hola');
     try {
         const result = await createComment(req.user.id, req.body.text, req.body.postId);
 
@@ -117,6 +113,7 @@ router.post('/comment', getToken, async (req, res) => {
         } else {
             res.json({ error: 'No se agrego su comment' });
         }
+
     } catch (error) {
         res.json({ error: error.message });
     }
