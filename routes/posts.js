@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getAllPosts, getPostById, getPostsByCategory, insertFavorite, deleteFavorite, createPost, createComment, getCommentsByPostId, deletePostById, getPostCreatedByUser } = require('../models/post');
+const { getAllPosts, getPostById, getPostsByCategory, insertFavorite, deleteFavorite, createPost, createComment, getCommentsByPostId, deletePostById, getPostCreatedByUser, updatePostById } = require('../models/post');
 const { getToken } = require('./middlewares');
 const jwt = require('jsonwebtoken');
 
@@ -144,17 +144,13 @@ router.delete('/:postId', async (req, res) => {
 });
 
 /* edito el post  */
-router.put('/:postId', async (req, res) => {
-    const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, process.env.SECRET_KEY);
-
+router.put('/edit', async (req, res) => {
     try {
-        const result = await updatePostById(user.id, req.body.postId, req.body);
+        const result = await updatePostById(req.body);
         if (result.affectedRows === 1) {
-            const editedPost = await getPostById(req.body.postId);
-            res.json({ editedPost: editedPost });
+            res.json({ result });
         } else {
-            res.json({ error: 'No se ha podido actualizar' });
+            res.json({ error: 'No se ha podido editar' });
         }
     } catch (error) {
         res.json({ error: error.message });

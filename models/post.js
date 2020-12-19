@@ -126,9 +126,9 @@ const deletePostById = (postId) => {
 };
 
 /* edito un post */
-const updatePostById = (postId, { title, main_image, category, keywords, text, summary, type }) => {
+const updatePostById = ({ id, title, main_image, category, keywords, text, summary }) => {
     return new Promise((resolve, reject) => {
-        db.query('UPDATE posts SET title = ?, main_image = ?, category = ?, keywords = ?, text = ?, summary = ?, type = ?', [title, main_image, category, keywords, text, summary, type = 1, postId], (error, result) => {
+        db.query('UPDATE posts SET title = ?, main_image = ?, category = ?, keywords = ?, text = ?, summary = ? WHERE id = ?', [title, main_image, category, keywords, text, summary, id], (error, result) => {
             if (error) reject(error);
             resolve(result);
         });
