@@ -16,7 +16,7 @@ router.get('/:testId/questions', async (req, res) => {
 
 /* setAnswers  */
 router.post('/answers', async (req, res) => {
-    const answersArray = req.body.answersArray;
+    const usersAnswersArray = req.body.answersArray;
     const testId = req.body.testId;
     const initDate = req.body.initDate;
 
@@ -41,46 +41,103 @@ router.post('/answers', async (req, res) => {
     }
 
     // generamos el array a insertar en base de datos
-    answersArray.map(answer => {
+    usersAnswersArray.map(answer => {
         answer.push(user.id, timesRepeated);
     })
 
     // seteamos las respuestas
     try {
-        await setAnswers(answersArray);
+        await setAnswers(usersAnswersArray);
     } catch (error) {
         res.status(400).json({ error: process.env.RESPONSE_ERROR_ON_SAVE })
     }
 
     try {
         // obtenemos los ids de las preguntas respondidas
-        const questionIdsArray = answersArray.map(answer => answer[1])
+        const questionIdsArray = usersAnswersArray.map(answer => answer[1])
 
         // obtenemos las respuestas válidas guardadas en la BBDD
-        const validAnswers = await getQuestionsAnswers(questionIdsArray)
+        const modelAnswers = await getQuestionsAnswers(questionIdsArray)
 
         // calculamos el numero total de preguntas
-        const totalAnswers = answersArray.length
+        const totalAnswers = usersAnswersArray.length
 
-        let rightAnswers = 0
+        let t1RightAnswers = 0;
+        let t2Result = {
+            FAS: 0,
+            COM: 0,
+            NEO: 0,
+            CAP: 0,
+            ANA: 0
+        };
 
-        // recorremos el array de respuestas del usuario y comprobamos si coincide con la respuesta válida
-        answersArray.map(answer => {
-            if (validAnswers.find(validAnswer => validAnswer.id === answer[1]).answer_valid == answer[2]) {
-                rightAnswers++
-            }
-        })
 
-        // calculamos el resultado porcentual
-        const percentResult = rightAnswers / totalAnswers * 100
+        switch (testId) {
+            // lógica test1 (banderas)
+            case 1:
+                usersAnswersArray.map(answer => {
+                    t1RightAnswers = t1RightAnswers + modelAnswers.find(modelAnswer => modelAnswer.id === answer[1]).test_1
+                })
 
-        // insertamos el resultado en la BBDD
-        const insertResult = await setResult(testId, user.id, initDate, timesRepeated, rightAnswers, totalAnswers, percentResult)
+                // calculamos el resultado porcentual
+                const percentResult = t1RightAnswers / totalAnswers * 100
 
-        // obtenemos el resultado insertado
-        const resultData = await getResult(insertResult.insertId)
+                // insertamos el resultado en la BBDD
+                const insertResult = await setResult(testId, user.id, initDate, timesRepeated, rightAnswers, totalAnswers, percentResult)
 
-        res.json(resultData);
+                // obtenemos el resultado insertado
+                const resultData = await getResult(insertResult.insertId)
+
+                res.json(resultData);
+                break;
+
+            // lógica test2 (orientación política)
+            case 2:
+                usersAnswersArray.map(answer => {
+
+                    switch (modelAnswers.find(modelAnswer => modelAnswer.id === answer[1]).test_2) {
+                        case 'FAS':
+                            t2Result.FAS = t2Result.FAS + 1
+                            break;
+
+                        case 'COM':
+                            t2Result.COM = t2Result.COM + 1
+                            break;
+
+                        case 'NEO':
+                            t2Result.NEO = t2Result.NEO + 1
+                            break;
+
+                        case 'CAP':
+                            t2Result.CAP = t2Result.CAP + 1
+                            break;
+
+                        case 'ANA':
+                            t2Result.ANA = t2Result.ANA + 1
+                            break;
+
+                        default:
+                            break;
+                    }
+                })
+                break;
+
+            default:
+                break;
+        }
+        // // recorremos el array de respuestas del usuario y comprobamos si coincide con la respuesta válida
+        // usersAnswersArray.map(answer => {
+        //     if (modelAnswers.find(modelAnswer => modelAnswer.id === answer[1]).answer_valid == answer[2]) {
+        //         rightAnswers++
+        //     }
+        // })
+
+
+
+
+
+
+
 
     } catch (error) {
         res.status(400).json({ error: process.env.RESPONSE_ERROR_ON_SAVE })
