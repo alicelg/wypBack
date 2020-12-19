@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getAllPosts, getPostById, getPostsByCategory, insertFavorite, deleteFavorite, createPost, createComment, getCommentsByPostId } = require('../models/post');
+const { getAllPosts, getPostById, getPostsByCategory, insertFavorite, deleteFavorite, createPost, createComment, getCommentsByPostId, deletePostById } = require('../models/post');
 const { getToken } = require('./middlewares');
 const jwt = require('jsonwebtoken');
 
@@ -19,15 +19,19 @@ router.get('/:postId', (req, res) => {
     const postId = req.params.postId;
 
     getPostById(postId).then(post => {
-        getCommentsByPostId(postId).then(comments => {
-            const commentsArray = [];
-            comments.map(comment => Object.keys(comment).map(value => {
-                commentsArray.push(JSON.parse(comment[value]))
-            }));
+        if (post != null) {
+            getCommentsByPostId(postId).then(comments => {
+                const commentsArray = [];
+                comments.map(comment => Object.keys(comment).map(value => {
+                    commentsArray.push(JSON.parse(comment[value]))
+                }));
 
-            post.comments = commentsArray;
-            res.json(post);
-        })
+                post.comments = commentsArray;
+                res.json(post);
+            })
+        } else {
+            res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
+        }
     })
         .catch(error => {
             console.log(error);
@@ -118,6 +122,27 @@ router.post('/comment', getToken, async (req, res) => {
         res.json({ error: error.message });
     }
 });
+
+
+/* ruta para eliminar los post  */
+router.delete('/:postId', async (req, res) => {
+    // const token = req.headers.authorization.split(" ")[1];
+    // const user = jwt.verify(token, process.env.SECRET_KEY);
+
+    try {
+        const result = await deletePostById(req.params.postId);
+        if (result.affectedRows === 1) {
+            res.json({ mensaje: 'Se ha eliminado su post' });
+        } else {
+
+            res.json({ error: 'Ha ocurrido un error en el eliminado' })
+            console.log(error);
+        }
+    } catch (error) {
+        res.json({ error: error.message });
+    }
+});
+
 
 
 module.exports = router;

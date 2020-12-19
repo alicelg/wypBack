@@ -5,7 +5,7 @@
 /* recuperar todos los conceptos */
 const getAllPosts = (pType) => {
     return new Promise((resolve, reject) => {
-        db.query('SELECT * FROM posts where type = ?', [pType], (error, rows) => {
+        db.query('SELECT * FROM posts where type = ? AND posts.delete = 0', [pType], (error, rows) => {
             if (error) reject(error);
             if (rows.length === 0) resolve(null);
             resolve(rows);
@@ -15,8 +15,9 @@ const getAllPosts = (pType) => {
 
 /* recupero un post por id para poderlo visualizar en detalle en front*/
 const getPostById = (pPostId) => {
+    console.log(pPostId);
     return new Promise((resolve, reject) => {
-        db.query('SELECT * FROM posts WHERE id = ?', [pPostId], (error, rows) => {
+        db.query('SELECT * FROM posts WHERE id = ? AND posts.delete = 0', [pPostId], (error, rows) => {
             if (error) reject(error);
             if (rows.length === 0) resolve(null);
             resolve(rows[0]);
@@ -77,7 +78,7 @@ const insertFavorite = (pUserId, pPostId) => {
 /* los post favoritos de usuario */
 const getPostByUser = (pUserId) => {
     return new Promise((resolve, reject) => {
-        db.query('SELECT * FROM user_post INNER JOIN posts ON user_post.post_id = posts.id WHERE user_post.user_id = ?', [pUserId], (error, rows) => {
+        db.query('SELECT * FROM user_post INNER JOIN posts ON user_post.post_id = posts.id WHERE user_post.user_id = ? AND posts.delete = 0', [pUserId], (error, rows) => {
             if (error) reject(error);
             resolve(rows)
         });
@@ -114,6 +115,16 @@ const getCommentsByPostId = (pPostId) => {
     });
 }
 
+/* elimino un post */
+const deletePostById = (postId) => {
+    return new Promise((resolve, result) => {
+        db.query('UPDATE posts SET posts.delete = 1 WHERE id = ?', [postId], (error, result) => {
+            if (error) reject(error);
+            resolve(result);
+        });
+    });
+};
+
 module.exports = {
-    getAllPosts, getPostById, getPostByTitleType, getPostsByCategory, createPost, insertFavorite, getPostByUser, deleteFavorite, createComment, getCommentsByPostId
+    getAllPosts, getPostById, getPostByTitleType, getPostsByCategory, createPost, insertFavorite, getPostByUser, deleteFavorite, createComment, getCommentsByPostId, deletePostById
 }
