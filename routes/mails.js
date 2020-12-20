@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { sendEmail } = require('../models/mailCtrl');
+const { sendEmail } = require('../models/mail');
 
 
 router.post('/', async (req, res) => {
