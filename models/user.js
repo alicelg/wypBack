@@ -13,6 +13,15 @@ const getAll = () => {
     });
 }
 
+const getUserById = (pUserId) => {
+    return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM users WHERE users.id = ? AND users.delete = 0', [pUserId], (error, rows) => {
+            if (error) reject(error);
+            resolve(rows[0])
+        });
+    });
+}
+
 /* Función para login (ingresar como usuario ya registrado) */
 const getByEmail = (pEmail) => {
     return new Promise((resolve, reject) => {
@@ -38,9 +47,10 @@ const create = ({ nickname, email, password }) => {
 
 /* Editar usuario  */
 
-const updateById = (pEmail, { name, surname, studies, current_work, photo, nickname, country, linkedin }) => {
+const updateUserById = ({ id, name, surname, studies, currentWork, photo, nickname, country, linkedin }) => {
+    console.log(studies, currentWork);
     return new Promise((resolve, reject) => {
-        db.query('UPDATE users SET name =?, surname=?, studies=?, current_work=?, photo=?, nickname=?, country=?, linkedin=? WHERE email =?', [name, surname, studies, current_work, photo, nickname, country, linkedin, pEmail], (error, result) => {
+        db.query('UPDATE users SET  name = ?, surname = ?, studies= ?, current_work = ?, photo = ?, nickname = ?, country = ?, linkedin = ? WHERE id = ?', [name, surname, studies, currentWork, photo, nickname, country, linkedin, id], (error, result) => {
             if (error) reject(error);
             resolve(result);
         });
@@ -48,6 +58,7 @@ const updateById = (pEmail, { name, surname, studies, current_work, photo, nickn
 }
 
 
+
 module.exports = {
-    getAll, create, getByEmail, updateById
+    getAll, create, getByEmail, updateUserById, getUserById
 }

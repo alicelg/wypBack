@@ -1,16 +1,17 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { getAll, create, getByEmail, updateById } = require('../models/user');
+const { create, getByEmail, updateUserById, getUserById } = require('../models/user');
 const { getConceptsByUser } = require('../models/concept');
 const { getPostByUser, getPostCreatedByUser } = require('../models/post');
 
 
 /* GETALL usuarios */
 router.get('/', async (req, res) => {
+  console.log(req.query);
   try {
-    const rows = await getAll();
-    res.json(rows);
+    const user = await getUserById(req.query.userId);
+    res.json(user);
   } catch (error) {
     return res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND });
   }
@@ -65,7 +66,7 @@ function createJwtToken(user) {
     surname: user.surname,
     email: user.email,
     studies: user.studies,
-    currentWork: user.current_work,
+    current_work: user.current_work,
     photo: user.photo,
     nickname: user.nickname,
     registerDate: user.date,
@@ -79,11 +80,11 @@ function createJwtToken(user) {
 }
 
 /* editar los datos del usuario */
-
 router.put('/update', async (req, res) => {
+  console.log('hola');
 
   try {
-    const result = await updateById(req.body.email, req.body);
+    const result = await updateUserById(req.body);
     if (result.affectedRows === 1) {
       const newdata = await getByEmail(req.body.email);
       res.json({ user: newdata });
@@ -98,7 +99,6 @@ router.put('/update', async (req, res) => {
 })
 
 /* conceptos favoritos */
-
 router.get('/concepts', async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   const user = jwt.verify(token, process.env.SECRET_KEY);
@@ -140,6 +140,8 @@ router.get('/created/posts', async (req, res) => {
     res.json({ error: error.message });
   }
 });
+
+
 
 
 
