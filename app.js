@@ -16,6 +16,7 @@ const postsRouter = require('./routes/posts');
 const searchRouter = require('./routes/searchs');
 const countriesRouter = require('./routes/countries');
 const testsRouter = require('./routes/tests');
+const mailsRouter = require('./routes/mails')
 
 
 const app = express();
@@ -39,6 +40,7 @@ app.use('/posts', postsRouter);
 app.use('/search', searchRouter);
 app.use('/countries', countriesRouter);
 app.use('/tests', testsRouter);
+app.use('/mails', mailsRouter);
 
 
 
