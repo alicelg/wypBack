@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getQuestionsByTest, getTimesRepeated, setAnswers, getQuestionsAnswers, setResult, getResult } = require('../models/test');
+const { getQuestionsByTest, getTimesRepeated, setAnswers, getQuestionsEvaluation, setResult, getResult } = require('../models/test');
 const jwt = require('jsonwebtoken');
 
 
@@ -16,14 +16,13 @@ router.get('/:testId/questions', async (req, res) => {
 
 /* setAnswers  */
 router.post('/answers', async (req, res) => {
-    const usersAnswersArray = req.body.answersArray;
+    const userAnswersArray = req.body.answersArray;
     const testId = req.body.testId;
     const initDate = req.body.initDate;
 
     // extraemos el usuario del token
     const token = req.headers.authorization.split(" ")[1];
     const user = jwt.verify(token, process.env.SECRET_KEY);
-
 
     // obtenemos el numero de veces que el usuario ha realizado el test
     let timesRepeated;
@@ -41,27 +40,28 @@ router.post('/answers', async (req, res) => {
     }
 
     // generamos el array a insertar en base de datos
-    usersAnswersArray.map(answer => {
+    userAnswersArray.map(answer => {
         answer.push(user.id, timesRepeated);
     })
 
     // seteamos las respuestas
     try {
-        await setAnswers(usersAnswersArray);
+        await setAnswers(userAnswersArray);
     } catch (error) {
         res.status(400).json({ error: process.env.RESPONSE_ERROR_ON_SAVE })
     }
 
     try {
         // obtenemos los ids de las preguntas respondidas
-        const questionIdsArray = usersAnswersArray.map(answer => answer[1])
+        const questionIdsArray = userAnswersArray.map(answer => answer[1])
 
         // obtenemos las respuestas válidas guardadas en la BBDD
-        const modelAnswers = await getQuestionsAnswers(questionIdsArray)
+        const questionsEvaluationArray = await getQuestionsEvaluation(questionIdsArray)
 
         // calculamos el numero total de preguntas
-        const totalAnswers = usersAnswersArray.length
+        const totalAnswers = userAnswersArray.length
 
+        // inicializamos los resultados
         let t1RightAnswers = 0;
         let t2Result = {
             FAS: 0,
@@ -71,31 +71,32 @@ router.post('/answers', async (req, res) => {
             ANA: 0
         };
 
-
         switch (testId) {
             // lógica test1 (banderas)
-            case 1:
-                usersAnswersArray.map(answer => {
-                    t1RightAnswers = t1RightAnswers + modelAnswers.find(modelAnswer => modelAnswer.id === answer[1]).test_1
+            case '1':
+                // recorremos las respuestas del usuario y comprobamos su evaluación
+                userAnswersArray.map(answer => {
+                    t1RightAnswers = t1RightAnswers + questionsEvaluationArray.find(modelAnswer => modelAnswer.question_id === answer[1] && modelAnswer.answer === answer[2]).test1
                 })
 
                 // calculamos el resultado porcentual
                 const percentResult = t1RightAnswers / totalAnswers * 100
 
                 // insertamos el resultado en la BBDD
-                const insertResult = await setResult(testId, user.id, initDate, timesRepeated, rightAnswers, totalAnswers, percentResult)
+                const insertResult = await setResult(testId, user.id, initDate, timesRepeated, t1RightAnswers, totalAnswers, percentResult)
 
                 // obtenemos el resultado insertado
                 const resultData = await getResult(insertResult.insertId)
 
+                // devolvemos el resultado
                 res.json(resultData);
                 break;
 
             // lógica test2 (orientación política)
-            case 2:
-                usersAnswersArray.map(answer => {
+            case '2':
+                userAnswersArray.map(answer => {
 
-                    switch (modelAnswers.find(modelAnswer => modelAnswer.id === answer[1]).test_2) {
+                    switch (questionsEvaluationArray.find(modelAnswer => modelAnswer.id === answer[1]).test_2) {
                         case 'FAS':
                             t2Result.FAS = t2Result.FAS + 1
                             break;
@@ -123,21 +124,9 @@ router.post('/answers', async (req, res) => {
                 break;
 
             default:
+                res.status(400).json({ error: process.env.RESPONSE_ERROR_ON_SAVE })
                 break;
         }
-        // // recorremos el array de respuestas del usuario y comprobamos si coincide con la respuesta válida
-        // usersAnswersArray.map(answer => {
-        //     if (modelAnswers.find(modelAnswer => modelAnswer.id === answer[1]).answer_valid == answer[2]) {
-        //         rightAnswers++
-        //     }
-        // })
-
-
-
-
-
-
-
 
     } catch (error) {
         res.status(400).json({ error: process.env.RESPONSE_ERROR_ON_SAVE })
