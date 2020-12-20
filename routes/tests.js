@@ -86,7 +86,7 @@ router.post('/answers', async (req, res) => {
                 const insertResult = await setResult(testId, user.id, initDate, timesRepeated, t1RightAnswers, totalAnswers, percentResult)
 
                 // obtenemos el resultado insertado
-                const resultData = await getResult(insertResult.insertId)
+                const resultData = await getResult(user.id, testId, timesRepeated)
 
                 // devolvemos el resultado
                 res.json(resultData);
@@ -132,6 +132,23 @@ router.post('/answers', async (req, res) => {
         res.status(400).json({ error: process.env.RESPONSE_ERROR_ON_SAVE })
     }
 });
+
+router.get('/:testId/result', async (req, res) => {
+    const testId = req.params.testId;
+    const timesRepeated = req.query.timesRepeated;
+
+    // extraemos el usuario del token
+    const token = req.headers.authorization.split(" ")[1];
+    const user = jwt.verify(token, process.env.SECRET_KEY);
+
+    try {
+        const result = await getResult(user.id, testId, timesRepeated)
+        res.json(result);
+    } catch (error) {
+        res.status(400).json({ error: process.env.RESPONSE_NOT_FOUND })
+    }
+});
+
 
 
 

@@ -68,10 +68,9 @@ const setResult = (pTestId, pUserId, pInitDate, pTimesRepeated, pRightAnswers, p
     });
 };
 
-
-const getResult = (pResultId) => {
+const getResult = (pUserId, pTestId, pTimesRepeated) => {
     return new Promise((resolve, reject) => {
-        db.query("SELECT * FROM test_results WHERE id = ? ", [pResultId], (error, rows) => {
+        db.query("SELECT * FROM test_results WHERE user_id = ? AND test_id = ? AND times_repeated = ? ", [pUserId, pTestId, pTimesRepeated], (error, rows) => {
             if (error) reject(error);
             if (rows.length === 0) resolve(null);
             resolve(rows[0]);
