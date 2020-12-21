@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const { create, getByEmail, updateUserById, getUserById } = require('../models/user');
 const { getConceptsByUser } = require('../models/concept');
 const { getPostByUser, getPostCreatedByUser } = require('../models/post');
+const { sendEmail } = require('../models/mail');
+
 
 
 /* GETALL usuarios */
@@ -21,10 +23,24 @@ router.get('/', async (req, res) => {
 /* en un hash nunca sabremos la contraseña encambio en un encriptado si se puede desencriptar */
 router.post('/create', async (req, res) => {
   try {
+    console.log(2);
+
     req.body.password = bcrypt.hashSync(req.body.password, 10);
     const result = await create(req.body);
+
+    console.log(1);
+    const mail = {
+      to: req.body.email,
+      subject: "Bienvenido a WatchYourPolitics",
+      // text: pMail.text,
+      html: "<p><img src='https://ckeditor.com/apps/ckfinder/userfiles/files/Christmas%20Holiday%20Poster.png' style='height:849px; width:600px' /></p> <small>Este mensaje va dirigido exclusivamente a la persona o entidad que se muestra como destinatario/s, y puede contener datos y/o informaci&oacute;n confidencial, sometida a secreto profesional o cuya divulgaci&oacute;n est&eacute; prohibida en virtud de la legislaci&oacute;n vigente. Toda divulgaci&oacute;n, reproducci&oacute;n u otra acci&oacute;n al respecto por parte de personas o entidades distintas al destinatario est&aacute; prohibida. Si ha recibido este mensaje por error, por favor, contacte con la persona que figura como remitente y proceda a su eliminaci&oacute;n. La transmisi&oacute;n por v&iacute;a electr&oacute;nica no permite garantizar la confidencialidad de los mensajes que se transmiten, ni su integridad o correcta recepci&oacute;n, por lo que no asumimos responsabilidad alguna por estas circunstancias. This message is intended only for the named person or company who is the only authorized recipient, and may include confidential data under professional secrecy, and its disclosure is prohibited by current legislation. Disclosure, copy or any other action in this message by a person or company different to the intended recipient is prohibited. If this message has reached you in error, please notify the sender and destroy it immediately. Electronic communications of data may not guarantee the message&rsquo;s confidentiality, neither their integrity nor correct receipt, so we do not take responsibility for any of those circumstances.</small>"
+    };
+    console.log(mail);
+    await sendEmail(mail);
+
     res.json(result);
   } catch (error) {
+    console.log(error);
     console.log(error.code, error.errno);
 
     if (error.errno == 1062) {

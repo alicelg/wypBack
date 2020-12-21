@@ -2,6 +2,8 @@ const nodemailer = require('nodemailer');
 
 const sendEmail = (pMail) => {
     return new Promise((resolve, reject) => {
+        console.log(pMail);
+
         // Definimos el transporter
         const transporter = nodemailer.createTransport({
             service: 'Gmail',
@@ -13,7 +15,7 @@ const sendEmail = (pMail) => {
 
         // Definimos el email
         const mailOptions = {
-            from: pMail.from,
+            from: "watchyourpolitics@gmail.com",
             to: pMail.to,
             subject: pMail.subject,
             // text: pMail.text,
@@ -22,6 +24,7 @@ const sendEmail = (pMail) => {
 
         // Enviamos el email
         transporter.sendMail(mailOptions, function (error, info) {
+            console.log(error);
             if (error) reject(error);
             resolve("Email sent")
         });
