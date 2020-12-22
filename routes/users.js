@@ -44,9 +44,15 @@ router.post('/create', async (req, res) => {
     console.log(error.code, error.errno);
 
     if (error.errno == 1062) {
-      return res.status(400).json({ error: process.env.RESPONSE_ALREADY_EXISTS })
+      if (error.sqlMessage.includes('email_delete_UNIQUE')) {
+        return res.status(200).json({ error: "email" })
+      } else if (error.sqlMessage.includes('nickname_UNIQUE')) {
+        return res.status(200).json({ error: "nickname" })
+      } else {
+        return res.status(200).json({ error: process.env.RESPONSE_ALREADY_EXISTS })
+      }
     } else {
-      return res.status(400).json({ error: process.env.RESPONSE_ERROR_ON_SAVE })
+      return res.status(200).json({ error: process.env.RESPONSE_ERROR_ON_SAVE })
     };
   }
 });
