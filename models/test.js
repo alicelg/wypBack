@@ -58,9 +58,9 @@ const getQuestionsEvaluation = (pQuestionIdsArray) => {
 };
 
 
-const setResult = (pTestId, pUserId, pInitDate, pTimesRepeated, pRightAnswers, pTotalAnswers, pPercentResult) => {
+const setResult = (pTestId, pUserId, pInitDate, pTimesRepeated, pRightAnswers, pTotalAnswers, pT1PercentResult, pT2Result) => {
     return new Promise((resolve, reject) => {
-        db.query("INSERT INTO test_results (test_id, user_id, init_date, times_repeated, right_answers, total_answers, percent_result ) VALUES (?,?,?,?,?,?,?)", [pTestId, pUserId, pInitDate, pTimesRepeated, pRightAnswers, pTotalAnswers, pPercentResult], (error, rows) => {
+        db.query("INSERT INTO test_results (test_id, user_id, init_date, times_repeated, right_answers, total_answers, percent_result, political_orientation ) VALUES (?,?,?,?,?,?,?,?)", [pTestId, pUserId, pInitDate, pTimesRepeated, pRightAnswers, pTotalAnswers, pT1PercentResult, pT2Result], (error, rows) => {
             if (error) reject(error);
             if (rows.length === 0) resolve(null);
             resolve(rows);
