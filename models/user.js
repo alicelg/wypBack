@@ -48,7 +48,6 @@ const create = ({ nickname, email, password }) => {
 /* Editar usuario  */
 
 const updateUserById = ({ id, name, surname, studies, currentWork, photo, nickname, country, linkedin }) => {
-    console.log(studies, currentWork);
     return new Promise((resolve, reject) => {
         db.query('UPDATE users SET  name = ?, surname = ?, studies= ?, current_work = ?, photo = ?, nickname = ?, country = ?, linkedin = ? WHERE id = ?', [name, surname, studies, currentWork, photo, nickname, country, linkedin, id], (error, result) => {
             if (error) reject(error);

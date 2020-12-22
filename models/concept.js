@@ -35,8 +35,6 @@ const getConceptsByPage = (pPagina) => {
 
 
 const insertFavorite = (pUserId, pConceptId) => {
-    console.log(pConceptId);
-
     return new Promise((resolve, reject) => {
         db.query('INSERT INTO favorite_concepts (user_id, concept_id) VALUES (?,?)', [pUserId, pConceptId], (error, rows) => {
             if (error) reject(error);

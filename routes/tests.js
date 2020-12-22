@@ -123,14 +123,8 @@ router.post('/answers', async (req, res) => {
                     }
                 })
 
-                console.log(t2Result);
-
-                
-
-
                 // insertamos el resultado en la BBDD
-                const insertT2Result = await setResult(testId, user.id, initDate, timesRepeated, null, totalAnswers, null, JSON.stringify(t2Result)
-                )
+                const insertT2Result = await setResult(testId, user.id, initDate, timesRepeated, null, totalAnswers, null, JSON.stringify(t2Result))
 
                 // obtenemos el resultado insertado
                 const resultT2Data = await getResult(user.id, testId, timesRepeated)
