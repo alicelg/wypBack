@@ -108,8 +108,6 @@ router.post('/new', getToken, async (req, res) => {
 
 /* ruta para favoritos post */
 router.post('/favorite', (req, res) => {
-    console.log(req.body);
-
     const token = req.headers.authorization.split(" ")[1];
     const user = jwt.verify(token, process.env.SECRET_KEY);
 

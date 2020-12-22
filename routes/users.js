@@ -10,7 +10,6 @@ const { sendEmail } = require('../models/mail');
 
 /* GETALL usuarios */
 router.get('/', async (req, res) => {
-  console.log(req.query);
   try {
     const user = await getUserById(req.query.userId);
     res.json(user);
@@ -23,26 +22,19 @@ router.get('/', async (req, res) => {
 /* en un hash nunca sabremos la contraseña encambio en un encriptado si se puede desencriptar */
 router.post('/create', async (req, res) => {
   try {
-    console.log(2);
-
     req.body.password = bcrypt.hashSync(req.body.password, 10);
     const result = await create(req.body);
 
-    console.log(1);
     const mail = {
       to: req.body.email,
       subject: "Bienvenido a WatchYourPolitics",
       // text: pMail.text,
       html: "<figure class='image'><img src='https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/aa5b4fdb228752803722d8872912afe8c6046b2f5c8885a7.png' srcset='https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/aa5b4fdb228752803722d8872912afe8c6046b2f5c8885a7.png/w_160 160w, https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/aa5b4fdb228752803722d8872912afe8c6046b2f5c8885a7.png/w_320 320w, https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/aa5b4fdb228752803722d8872912afe8c6046b2f5c8885a7.png/w_480 480w, https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/aa5b4fdb228752803722d8872912afe8c6046b2f5c8885a7.png/w_640 640w, https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/aa5b4fdb228752803722d8872912afe8c6046b2f5c8885a7.png/w_800 800w, https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/aa5b4fdb228752803722d8872912afe8c6046b2f5c8885a7.png/w_960 960w, https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/aa5b4fdb228752803722d8872912afe8c6046b2f5c8885a7.png/w_1120 1120w, https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/aa5b4fdb228752803722d8872912afe8c6046b2f5c8885a7.png/w_1280 1280w, https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/aa5b4fdb228752803722d8872912afe8c6046b2f5c8885a7.png/w_1440 1440w, https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/aa5b4fdb228752803722d8872912afe8c6046b2f5c8885a7.png/w_1587 1587w' sizes='100vw' width='640'></figure><small>Este mensaje va dirigido exclusivamente a la persona o entidad que se muestra como destinatario/s, y puede contener datos y/o informaci&oacute;n confidencial, sometida a secreto profesional o cuya divulgaci&oacute;n est&eacute; prohibida en virtud de la legislaci&oacute;n vigente. Toda divulgaci&oacute;n, reproducci&oacute;n u otra acci&oacute;n al respecto por parte de personas o entidades distintas al destinatario est&aacute; prohibida. Si ha recibido este mensaje por error, por favor, contacte con la persona que figura como remitente y proceda a su eliminaci&oacute;n. La transmisi&oacute;n por v&iacute;a electr&oacute;nica no permite garantizar la confidencialidad de los mensajes que se transmiten, ni su integridad o correcta recepci&oacute;n, por lo que no asumimos responsabilidad alguna por estas circunstancias. This message is intended only for the named person or company who is the only authorized recipient, and may include confidential data under professional secrecy, and its disclosure is prohibited by current legislation. Disclosure, copy or any other action in this message by a person or company different to the intended recipient is prohibited. If this message has reached you in error, please notify the sender and destroy it immediately. Electronic communications of data may not guarantee the message&rsquo;s confidentiality, neither their integrity nor correct receipt, so we do not take responsibility for any of those circumstances.</small>"
     };
-    console.log(mail);
     await sendEmail(mail);
 
     res.json(result);
   } catch (error) {
-    console.log(error);
-    console.log(error.code, error.errno);
-
     if (error.errno == 1062) {
       if (error.sqlMessage.includes('email_delete_UNIQUE')) {
         return res.status(200).json({ error: "email" })
@@ -103,8 +95,6 @@ function createJwtToken(user) {
 
 /* editar los datos del usuario */
 router.put('/update', async (req, res) => {
-  console.log('hola');
-
   try {
     const result = await updateUserById(req.body);
     if (result.affectedRows === 1) {

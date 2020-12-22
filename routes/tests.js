@@ -67,8 +67,9 @@ router.post('/answers', async (req, res) => {
             FAS: 0,
             COM: 0,
             NEO: 0,
-            CAP: 0,
-            ANA: 0
+            SOC: 0,
+            ANA: 0,
+            total: totalAnswers,
         };
 
         switch (testId) {
@@ -80,23 +81,23 @@ router.post('/answers', async (req, res) => {
                 })
 
                 // calculamos el resultado porcentual
-                const percentResult = t1RightAnswers / totalAnswers * 100
+                const t1PercentResult = t1RightAnswers / totalAnswers * 100
 
                 // insertamos el resultado en la BBDD
-                const insertResult = await setResult(testId, user.id, initDate, timesRepeated, t1RightAnswers, totalAnswers, percentResult)
+                const insertT1Result = await setResult(testId, user.id, initDate, timesRepeated, t1RightAnswers, totalAnswers, t1PercentResult, null)
 
                 // obtenemos el resultado insertado
-                const resultData = await getResult(user.id, testId, timesRepeated)
+                const resultT1Data = await getResult(user.id, testId, timesRepeated)
 
                 // devolvemos el resultado
-                res.json(resultData);
+                res.json(resultT1Data);
                 break;
 
             // lógica test2 (orientación política)
             case '2':
                 userAnswersArray.map(answer => {
 
-                    switch (questionsEvaluationArray.find(modelAnswer => modelAnswer.id === answer[1]).test_2) {
+                    switch (questionsEvaluationArray.find(modelAnswer => modelAnswer.question_id === answer[1] && modelAnswer.answer === answer[2]).test2) {
                         case 'FAS':
                             t2Result.FAS = t2Result.FAS + 1
                             break;
@@ -109,8 +110,8 @@ router.post('/answers', async (req, res) => {
                             t2Result.NEO = t2Result.NEO + 1
                             break;
 
-                        case 'CAP':
-                            t2Result.CAP = t2Result.CAP + 1
+                        case 'SOC':
+                            t2Result.SOC = t2Result.SOC + 1
                             break;
 
                         case 'ANA':
@@ -121,6 +122,15 @@ router.post('/answers', async (req, res) => {
                             break;
                     }
                 })
+
+                // insertamos el resultado en la BBDD
+                const insertT2Result = await setResult(testId, user.id, initDate, timesRepeated, null, totalAnswers, null, JSON.stringify(t2Result))
+
+                // obtenemos el resultado insertado
+                const resultT2Data = await getResult(user.id, testId, timesRepeated)
+
+                // devolvemos el resultado
+                res.json(resultT2Data);
                 break;
 
             default:
